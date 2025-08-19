@@ -9,7 +9,7 @@ public class Jimmy {
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________");
         Scanner scanner = new Scanner(System.in);
-        List<String> list = new ArrayList<>();
+        List<Task> list = new ArrayList<>();
         boolean running = true;
         while (running) {
             String userInput = scanner.nextLine();
@@ -21,11 +21,12 @@ public class Jimmy {
             } else if (userInput.equals("list")) {
                 System.out.println("____________________________________________________________");
                 for (int i = 0; i < list.size(); i++) {
-                    System.out.println((i + 1) + ". " + list.get(i));
+                    Task t = list.get(i);
+                    System.out.print((i + 1) + ". [" + t.getStatusIcon() + "] " + t.description);
                 }
                 System.out.println("____________________________________________________________");
             } else {
-                list.add(userInput);
+                list.add(new Task(userInput));
                 System.out.println("____________________________________________________________");
                 System.out.println("added: " + userInput);
                 System.out.println("____________________________________________________________");
