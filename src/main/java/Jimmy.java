@@ -36,6 +36,14 @@ public class Jimmy {
                 System.out.print("\n");
                 System.out.println("[" + list.get(argument).getStatusIcon() + "] " + list.get(argument).description);
                 System.out.println("____________________________________________________________");
+            } else if (command.equals("unmark")) {
+                int argument = Integer.parseInt(inputParts[1]) - 1;
+                list.get(argument).markAsNotDone();
+                System.out.println("____________________________________________________________");
+                System.out.print("OK, I've marked this task as not done yet: ");
+                System.out.print("\n");
+                System.out.println("[" + list.get(argument).getStatusIcon() + "] " + list.get(argument).description);
+                System.out.println("____________________________________________________________");
             } else {
                 list.add(new Task(userInput));
                 System.out.println("____________________________________________________________");
