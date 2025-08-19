@@ -23,6 +23,7 @@ public class Jimmy {
                 for (int i = 0; i < list.size(); i++) {
                     Task t = list.get(i);
                     System.out.print((i + 1) + ". [" + t.getStatusIcon() + "] " + t.description);
+                    System.out.print("\n");
                 }
                 System.out.println("____________________________________________________________");
             } else {
