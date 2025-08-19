@@ -18,6 +18,12 @@ public class Jimmy {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
                 running = false;
+            } else if (userInput.equals("list")) {
+                System.out.println("____________________________________________________________");
+                for (int i = 0; i < list.size(); i++) {
+                    System.out.println((i + 1) + ". " + list.get(i));
+                }
+                System.out.println("____________________________________________________________");
             } else {
                 list.add(userInput);
                 System.out.println("____________________________________________________________");
