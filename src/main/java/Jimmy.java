@@ -10,8 +10,10 @@ public class Jimmy {
         boolean running = true;
         while (running) {
             String userInput = scanner.nextLine();
-            if (userInput.equals("exit")) {
+            if (userInput.equals("bye")) {
+                System.out.println("____________________________________________________________");
                 System.out.println("Bye. Hope to see you again soon!");
+                System.out.println("____________________________________________________________");
                 running = false;
             } else {
                 System.out.println("____________________________________________________________");
