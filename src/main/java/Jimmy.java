@@ -13,6 +13,8 @@ public class Jimmy {
         boolean running = true;
         while (running) {
             String userInput = scanner.nextLine();
+            String[] inputParts = userInput.split(" ", 2);
+            String command = inputParts[0];
             if (userInput.equals("bye")) {
                 System.out.println("____________________________________________________________");
                 System.out.println("Bye. Hope to see you again soon!");
@@ -25,6 +27,14 @@ public class Jimmy {
                     System.out.print((i + 1) + ". [" + t.getStatusIcon() + "] " + t.description);
                     System.out.print("\n");
                 }
+                System.out.println("____________________________________________________________");
+            } else if (command.equals("mark")) {
+                int argument = Integer.parseInt(inputParts[1]) - 1;
+                list.get(argument).markAsDone();
+                System.out.println("____________________________________________________________");
+                System.out.print("Nice! I've marked this task as done: ");
+                System.out.print("\n");
+                System.out.println("[" + list.get(argument).getStatusIcon() + "] " + list.get(argument).description);
                 System.out.println("____________________________________________________________");
             } else {
                 list.add(new Task(userInput));
