@@ -62,7 +62,18 @@ public class Jimmy {
                 System.out.println(t.toString());
                 System.out.println("Now you have " + list.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________");
-            }  else {
+            } else if (command.equals("event")) {
+                String description = inputParts[1].split("/from")[0].trim();
+                String from = inputParts[1].split("/from")[1].split("/to")[0].trim();
+                String to = inputParts[1].split("/to")[1].trim();
+                Task t = new Event(description, from, to);
+                list.add(t);
+                System.out.println("____________________________________________________________");
+                System.out.println("Got it. I've added this task:");
+                System.out.println(t.toString());
+                System.out.println("Now you have " + list.size() + " tasks in the list".);
+                System.out.println("____________________________________________________________");
+            } else {
                 list.add(new Task(userInput));
                 System.out.println("____________________________________________________________");
                 System.out.println("added: " + userInput);
