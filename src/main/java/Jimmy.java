@@ -24,7 +24,7 @@ public class Jimmy {
                 System.out.println("____________________________________________________________");
                 for (int i = 0; i < list.size(); i++) {
                     Task t = list.get(i);
-                    System.out.print((i + 1) + ". [" + t.getStatusIcon() + "] " + t.description);
+                    System.out.print((i + 1) + "." + t.toString());
                     System.out.print("\n");
                 }
                 System.out.println("____________________________________________________________");
@@ -43,6 +43,14 @@ public class Jimmy {
                 System.out.print("OK, I've marked this task as not done yet: ");
                 System.out.print("\n");
                 System.out.println("[" + list.get(argument).getStatusIcon() + "] " + list.get(argument).description);
+                System.out.println("____________________________________________________________");
+            } else if (command.equals("todo")) {
+                Task t = new Todo(inputParts[1]);
+                list.add(t);
+                System.out.println("____________________________________________________________");
+                System.out.println("Got it. I've added this task:");
+                System.out.println(t.toString());
+                System.out.println("Now you have " + list.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________");
             } else {
                 list.add(new Task(userInput));
