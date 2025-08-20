@@ -71,7 +71,7 @@ public class Jimmy {
                 System.out.println("____________________________________________________________");
                 System.out.println("Got it. I've added this task:");
                 System.out.println(t.toString());
-                System.out.println("Now you have " + list.size() + " tasks in the list".);
+                System.out.println("Now you have " + list.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________");
             } else {
                 list.add(new Task(userInput));
