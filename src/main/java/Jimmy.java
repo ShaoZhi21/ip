@@ -52,7 +52,17 @@ public class Jimmy {
                 System.out.println(t.toString());
                 System.out.println("Now you have " + list.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________");
-            } else {
+            } else if (command.equals("deadline")) {
+                String description = inputParts[1].split("/by")[0].trim();
+                String by = inputParts[1].split("/by")[1].trim();
+                Task t = new Deadline(description, by);
+                list.add(t);
+                System.out.println("____________________________________________________________");
+                System.out.println("Got it. I've added this task:");
+                System.out.println(t.toString());
+                System.out.println("Now you have " + list.size() + " tasks in the list.");
+                System.out.println("____________________________________________________________");
+            }  else {
                 list.add(new Task(userInput));
                 System.out.println("____________________________________________________________");
                 System.out.println("added: " + userInput);
