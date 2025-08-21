@@ -79,6 +79,18 @@ public class Jimmy {
                     System.out.println("____________________________________________________________");
                 } else if (command.equals("blah")) {
                     throw new JimmyException("I don't know what blah is. Bleh.");
+                } else if (command.equals("delete")) {
+                    if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                        throw new JimmyException("The description of a delete cannot be empty.");
+                    }
+                    int argument = Integer.parseInt(inputParts[1]) - 1;
+                    Task removedTask = list.get(argument);
+                    list.remove(argument);
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println(removedTask.toString());
+                    System.out.println("Now you have " + list.size() + " tasks in the list.");
+                    System.out.println("____________________________________________________________");
                 } else {
                     list.add(new Task(userInput));
                     System.out.println("____________________________________________________________");
