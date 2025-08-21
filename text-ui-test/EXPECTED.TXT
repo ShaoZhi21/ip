@@ -12,3 +12,16 @@ Got it. I've added this task:
 [D] [ ] Submit report (by: 2025-08-25)
 Now you have 2 tasks in the list.
 ____________________________________________________________
+____________________________________________________________
+The description of an event must include '/from' and '/to'.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[T] [ ] Read a book
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+[D] [ ] Finish assignment (by: 2025-08-30)
+Now you have 4 tasks in the list.
+____________________________________________________________

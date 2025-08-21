@@ -11,7 +11,7 @@ public class Jimmy {
         Scanner scanner = new Scanner(System.in);
         List<Task> list = new ArrayList<>();
         boolean running = true;
-        while (running) {
+        while (scanner.hasNextLine() && running) {
             String userInput = scanner.nextLine();
             try {
                 String[] inputParts = userInput.split(" ", 2);
@@ -30,6 +30,9 @@ public class Jimmy {
                     }
                     System.out.println("____________________________________________________________");
                 } else if (command.equals("mark")) {
+                    if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                        throw new JimmyException("The description of a mark cannot be empty.");
+                    }
                     int argument = Integer.parseInt(inputParts[1]) - 1;
                     list.get(argument).markAsDone();
                     System.out.println("____________________________________________________________");
@@ -38,6 +41,9 @@ public class Jimmy {
                     System.out.println("[" + list.get(argument).getStatusIcon() + "] " + list.get(argument).description);
                     System.out.println("____________________________________________________________");
                 } else if (command.equals("unmark")) {
+                    if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                        throw new JimmyException("The description of an unmark cannot be empty.");
+                    }
                     int argument = Integer.parseInt(inputParts[1]) - 1;
                     list.get(argument).markAsNotDone();
                     System.out.println("____________________________________________________________");
@@ -57,6 +63,9 @@ public class Jimmy {
                     System.out.println("Now you have " + list.size() + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 } else if (command.equals("deadline")) {
+                    if (inputParts.length < 2 || !inputParts[1].contains("/by")) {
+                        throw new JimmyException("The description of a deadline must include '/by'.");
+                    }
                     String description = inputParts[1].split("/by")[0].trim();
                     String by = inputParts[1].split("/by")[1].trim();
                     Task t = new Deadline(description, by);
@@ -67,6 +76,9 @@ public class Jimmy {
                     System.out.println("Now you have " + list.size() + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 } else if (command.equals("event")) {
+                    if (inputParts.length < 2 || !inputParts[1].contains("/from") || !inputParts[1].contains("/to")) {
+                        throw new JimmyException("The description of an event must include '/from' and '/to'.");
+                    }
                     String description = inputParts[1].split("/from")[0].trim();
                     String from = inputParts[1].split("/from")[1].split("/to")[0].trim();
                     String to = inputParts[1].split("/to")[1].trim();
