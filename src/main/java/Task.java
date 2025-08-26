@@ -19,6 +19,10 @@ public class Task {
         this.isDone = false;
     }
 
+    public String toFileString() {
+        return (isDone ? "1" : "0") + " | " + description;
+    }
+
     public String toString() {
         return description;
     }

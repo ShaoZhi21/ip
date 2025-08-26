@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,10 +15,7 @@ public class Jimmy {
         printWelcome();
 
         Scanner scanner = new Scanner(System.in);
-
         run(list, scanner);
-
-        scanner.close();
     }
 
     public static List<Task> loadTasks(Path filePath) {
@@ -110,6 +108,7 @@ public class Jimmy {
                     }
                     Task t = new Todo(inputParts[1]);
                     list.add(t);
+                    saveTask(t);
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
                     System.out.println(t.toString());
@@ -123,6 +122,7 @@ public class Jimmy {
                     String by = inputParts[1].split("/by")[1].trim();
                     Task t = new Deadline(description, by);
                     list.add(t);
+                    saveTask(t);
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
                     System.out.println(t.toString());
@@ -137,6 +137,7 @@ public class Jimmy {
                     String to = inputParts[1].split("/to")[1].trim();
                     Task t = new Event(description, from, to);
                     list.add(t);
+                    saveTask(t);
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
                     System.out.println(t.toString());
@@ -167,6 +168,16 @@ public class Jimmy {
                 System.out.println(e.getMessage());
                 System.out.println("____________________________________________________________");
             }
+        }
+    }
+    
+    public static void saveTask(Task t) {
+        String s = t.toFileString();
+        Path path = Paths.get("data", "jimmy.txt");
+        try {
+            Files.write(path, List.of(s), StandardOpenOption.APPEND);       
+        } catch (Exception e) {
+            System.out.println("Error saving task: " + e.getMessage());
         }
     }
 }
