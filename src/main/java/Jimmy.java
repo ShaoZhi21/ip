@@ -21,45 +21,46 @@ public class Jimmy {
         while (scanner.hasNextLine() && running) {
             String userInput = scanner.nextLine();
             try {
-                String[] inputParts = userInput.split(" ", 2);
-                String command = inputParts[0];
+                Parser.ParsedCommand parsed = Parser.parseCommand(userInput);
+                String command = parsed.command;
+                
                 if (userInput.equals("bye")) {
                     ui.showGoodbye();
                     running = false;
                 } else if (userInput.equals("list")) {
                     ui.showTaskList(list);
                 } else if (command.equals("mark")) {
-                    if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                    if (!Parser.isValidMarkCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a mark cannot be empty.");
                     }
-                    int argument = Integer.parseInt(inputParts[1]) - 1;
+                    int argument = Parser.parseTaskIndex(parsed.fullInput);
                     Task task = list.get(argument);
                     task.markAsDone();
                     storage.save(list);
                     ui.showTaskMarkedAsDone(task);
                 } else if (command.equals("unmark")) {
-                    if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                    if (!Parser.isValidUnmarkCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of an unmark cannot be empty.");
                     }
-                    int argument = Integer.parseInt(inputParts[1]) - 1;
+                    int argument = Parser.parseTaskIndex(parsed.fullInput);
                     Task task = list.get(argument);
                     task.markAsNotDone();
                     storage.save(list);
                     ui.showTaskMarkedAsNotDone(task);
                 } else if (command.equals("todo")) {
-                    if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                    if (!Parser.isValidTodoCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a todo cannot be empty.");
                     }
-                    Task t = new Todo(inputParts[1]);
+                    Task t = new Todo(parsed.fullInput);
                     list.add(t);
                     storage.save(list);
                     ui.showTaskAdded(t, list.size());
                 } else if (command.equals("deadline")) {
-                    if (inputParts.length < 2 || !inputParts[1].contains("/by")) {
+                    if (!Parser.isValidDeadlineCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a deadline must include '/by'.");
                     }
-                    String description = inputParts[1].split("/by")[0].trim();
-                    String by = inputParts[1].split("/by")[1].trim();
+                    String description = Parser.extractDeadlineDescription(parsed.fullInput);
+                    String by = Parser.extractDeadlineDate(parsed.fullInput);
                     try {
                         Task t = new Deadline(description, by);
                         list.add(t);
@@ -69,12 +70,12 @@ public class Jimmy {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
                 } else if (command.equals("event")) {
-                    if (inputParts.length < 2 || !inputParts[1].contains("/from") || !inputParts[1].contains("/to")) {
+                    if (!Parser.isValidEventCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of an event must include '/from' and '/to'.");
                     }
-                    String description = inputParts[1].split("/from")[0].trim();
-                    String from = inputParts[1].split("/from")[1].split("/to")[0].trim();
-                    String to = inputParts[1].split("/to")[1].trim();
+                    String description = Parser.extractEventDescription(parsed.fullInput);
+                    String from = Parser.extractEventFrom(parsed.fullInput);
+                    String to = Parser.extractEventTo(parsed.fullInput);
                     try {
                         Task t = new Event(description, from, to);
                         list.add(t);
@@ -86,10 +87,10 @@ public class Jimmy {
                 } else if (command.equals("blah")) {
                     throw new JimmyException("I don't know what blah is. Bleh.");
                 } else if (command.equals("delete")) {
-                    if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                    if (!Parser.isValidDeleteCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a delete cannot be empty.");
                     }
-                    int argument = Integer.parseInt(inputParts[1]) - 1;
+                    int argument = Parser.parseTaskIndex(parsed.fullInput);
                     Task removedTask = list.get(argument);
                     list.remove(argument);
                     storage.save(list);
