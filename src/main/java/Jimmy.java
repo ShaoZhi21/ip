@@ -1,9 +1,22 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.io.IOException;
 
 public class Jimmy {
     public static void main(String[] args) {
+        Path path = Paths.get("data", "jimmy.txt");
+        try {
+            if (!Files.exists(path)) {
+                Files.createDirectories(path.getParent());
+                Files.createFile(path);
+            }
+        } catch (IOException e) {
+            System.out.println("Error creating file: " + e.getMessage());
+        }
         System.out.println("____________________________________________________________");
         System.out.println(" Hello! I'm Jimmy");
         System.out.println(" What can I do for you?");
@@ -115,5 +128,6 @@ public class Jimmy {
                 System.out.println("____________________________________________________________");
             }
         }
+        scanner.close();
     }
 }
