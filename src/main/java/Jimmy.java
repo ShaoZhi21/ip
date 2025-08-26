@@ -35,13 +35,23 @@ public class Jimmy {
                         t = new Todo(description);
                     } else if (type.equals("D")) {
                         String by = parts[3];
-                        t = new Deadline(description, by);
+                        try {
+                            t = new Deadline(description, by);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Warning: Could not parse deadline date '" + by + "' for task: " + description);
+                            continue; 
+                        }
                     } else if (type.equals("E")) {
                         String from = parts[3];
                         String to = parts[4];
-                        t = new Event(description, from, to);
+                        try {
+                            t = new Event(description, from, to);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Warning: Could not parse event dates for task: " + description);
+                            continue; 
+                        }
                     } else {
-                        continue; // Skip unknown task types
+                        continue; 
                     }
                     if (isDone) {
                         t.markAsDone();
@@ -124,14 +134,18 @@ public class Jimmy {
                     }
                     String description = inputParts[1].split("/by")[0].trim();
                     String by = inputParts[1].split("/by")[1].trim();
-                    Task t = new Deadline(description, by);
-                    list.add(t);
-                    saveTasks(list);
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println(t.toString());
-                    System.out.println("Now you have " + list.size() + " tasks in the list.");
-                    System.out.println("____________________________________________________________");
+                    try {
+                        Task t = new Deadline(description, by);
+                        list.add(t);
+                        saveTasks(list);
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Got it. I've added this task:");
+                        System.out.println(t.toString());
+                        System.out.println("Now you have " + list.size() + " tasks in the list.");
+                        System.out.println("____________________________________________________________");
+                    } catch (IllegalArgumentException e) {
+                        throw new JimmyException("Invalid date format: " + e.getMessage());
+                    }
                 } else if (command.equals("event")) {
                     if (inputParts.length < 2 || !inputParts[1].contains("/from") || !inputParts[1].contains("/to")) {
                         throw new JimmyException("The description of an event must include '/from' and '/to'.");
@@ -139,14 +153,18 @@ public class Jimmy {
                     String description = inputParts[1].split("/from")[0].trim();
                     String from = inputParts[1].split("/from")[1].split("/to")[0].trim();
                     String to = inputParts[1].split("/to")[1].trim();
-                    Task t = new Event(description, from, to);
-                    list.add(t);
-                    saveTasks(list);
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println(t.toString());
-                    System.out.println("Now you have " + list.size() + " tasks in the list.");
-                    System.out.println("____________________________________________________________");
+                    try {
+                        Task t = new Event(description, from, to);
+                        list.add(t);
+                        saveTasks(list);
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Got it. I've added this task:");
+                        System.out.println(t.toString());
+                        System.out.println("Now you have " + list.size() + " tasks in the list.");
+                        System.out.println("____________________________________________________________");
+                    } catch (IllegalArgumentException e) {
+                        throw new JimmyException("Invalid date format: " + e.getMessage());
+                    }
                 } else if (command.equals("blah")) {
                     throw new JimmyException("I don't know what blah is. Bleh.");
                 } else if (command.equals("delete")) {
