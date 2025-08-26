@@ -9,10 +9,37 @@ import java.io.IOException;
 public class Jimmy {
     public static void main(String[] args) {
         Path path = Paths.get("data", "jimmy.txt");
+        List<String> lines = new ArrayList<>();
+        List<Task> list = new ArrayList<>();
         try {
             if (!Files.exists(path)) {
                 Files.createDirectories(path.getParent());
                 Files.createFile(path);
+            } else {
+                lines = Files.readAllLines(path);
+                for (String line : lines) {
+                    String[] parts = line.split(" \\| ");
+                    String type = parts[0];
+                    boolean isDone = parts[1].equals("1");
+                    String description = parts[2];
+                    Task t;
+                    if (type.equals("T")) {
+                        t = new Todo(description);
+                    } else if (type.equals("D")) {
+                        String by = parts[3];
+                        t = new Deadline(description, by);
+                    } else if (type.equals("E")) {
+                        String from = parts[3];
+                        String to = parts[4];
+                        t = new Event(description, from, to);
+                    } else {
+                        continue; // Skip unknown task types
+                    }
+                    if (isDone) {
+                        t.markAsDone();
+                    }
+                    list.add(t);
+                }
             }
         } catch (IOException e) {
             System.out.println("Error creating file: " + e.getMessage());
@@ -22,7 +49,6 @@ public class Jimmy {
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________");
         Scanner scanner = new Scanner(System.in);
-        List<Task> list = new ArrayList<>();
         boolean running = true;
         while (scanner.hasNextLine() && running) {
             String userInput = scanner.nextLine();
