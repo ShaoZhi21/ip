@@ -7,16 +7,17 @@ public class Jimmy {
         Storage storage = new Storage("data/jimmy.txt");
         Ui ui = new Ui();
         
-        List<Task> list = storage.load();
+        List<Task> loadedTasks = storage.load();
+        TaskList taskList = new TaskList(loadedTasks);
         
         ui.showWelcome();
 
         // User input
         Scanner scanner = new Scanner(System.in);
-        run(list, scanner, ui, storage);
+        run(taskList, scanner, ui, storage);
     }
 
-    public static void run(List<Task> list, Scanner scanner, Ui ui, Storage storage) {
+    public static void run(TaskList taskList, Scanner scanner, Ui ui, Storage storage) {
         boolean running = true;
         while (scanner.hasNextLine() && running) {
             String userInput = scanner.nextLine();
@@ -28,33 +29,33 @@ public class Jimmy {
                     ui.showGoodbye();
                     running = false;
                 } else if (userInput.equals("list")) {
-                    ui.showTaskList(list);
+                    ui.showTaskList(taskList.getAllTasks());
                 } else if (command.equals("mark")) {
                     if (!Parser.isValidMarkCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a mark cannot be empty.");
                     }
                     int argument = Parser.parseTaskIndex(parsed.fullInput);
-                    Task task = list.get(argument);
-                    task.markAsDone();
-                    storage.save(list);
+                    Task task = taskList.getTask(argument);
+                    taskList.markTaskAsDone(argument);
+                    storage.save(taskList.getAllTasks());
                     ui.showTaskMarkedAsDone(task);
                 } else if (command.equals("unmark")) {
                     if (!Parser.isValidUnmarkCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of an unmark cannot be empty.");
                     }
                     int argument = Parser.parseTaskIndex(parsed.fullInput);
-                    Task task = list.get(argument);
-                    task.markAsNotDone();
-                    storage.save(list);
+                    Task task = taskList.getTask(argument);
+                    taskList.markTaskAsNotDone(argument);
+                    storage.save(taskList.getAllTasks());
                     ui.showTaskMarkedAsNotDone(task);
                 } else if (command.equals("todo")) {
                     if (!Parser.isValidTodoCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a todo cannot be empty.");
                     }
                     Task t = new Todo(parsed.fullInput);
-                    list.add(t);
-                    storage.save(list);
-                    ui.showTaskAdded(t, list.size());
+                    taskList.addTask(t);
+                    storage.save(taskList.getAllTasks());
+                    ui.showTaskAdded(t, taskList.getSize());
                 } else if (command.equals("deadline")) {
                     if (!Parser.isValidDeadlineCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a deadline must include '/by'.");
@@ -63,9 +64,9 @@ public class Jimmy {
                     String by = Parser.extractDeadlineDate(parsed.fullInput);
                     try {
                         Task t = new Deadline(description, by);
-                        list.add(t);
-                        storage.save(list);
-                        ui.showTaskAdded(t, list.size());
+                        taskList.addTask(t);
+                        storage.save(taskList.getAllTasks());
+                        ui.showTaskAdded(t, taskList.getSize());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
@@ -78,9 +79,9 @@ public class Jimmy {
                     String to = Parser.extractEventTo(parsed.fullInput);
                     try {
                         Task t = new Event(description, from, to);
-                        list.add(t);
-                        storage.save(list);
-                        ui.showTaskAdded(t, list.size());
+                        taskList.addTask(t);
+                        storage.save(taskList.getAllTasks());
+                        ui.showTaskAdded(t, taskList.getSize());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
@@ -91,12 +92,12 @@ public class Jimmy {
                         throw new JimmyException("The description of a delete cannot be empty.");
                     }
                     int argument = Parser.parseTaskIndex(parsed.fullInput);
-                    Task removedTask = list.get(argument);
-                    list.remove(argument);
-                    storage.save(list);
-                    ui.showTaskDeleted(removedTask, list.size());
+                    Task removedTask = taskList.getTask(argument);
+                    taskList.removeTask(argument);
+                    storage.save(taskList.getAllTasks());
+                    ui.showTaskDeleted(removedTask, taskList.getSize());
                 } else {
-                    list.add(new Task(userInput));
+                    taskList.addTask(new Task(userInput));
                     ui.showTaskAddedSimple(userInput);
                 }
             } catch (JimmyException e) {
