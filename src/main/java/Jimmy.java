@@ -14,6 +14,55 @@ public class Jimmy {
         printWelcome();
 
         Scanner scanner = new Scanner(System.in);
+
+        run(list, scanner);
+
+        scanner.close();
+    }
+
+    public static List<Task> loadTasks(Path filePath) {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            if (Files.exists(filePath)) {
+                List<String> lines = Files.readAllLines(filePath);
+                for (String line : lines) {
+                    String[] parts = line.split(" \\| ");
+                    String type = parts[0];
+                    boolean isDone = parts[1].equals("1");
+                    String description = parts[2];
+                    Task t;
+                    if (type.equals("T")) {
+                        t = new Todo(description);
+                    } else if (type.equals("D")) {
+                        String by = parts[3];
+                        t = new Deadline(description, by);
+                    } else if (type.equals("E")) {
+                        String from = parts[3];
+                        String to = parts[4];
+                        t = new Event(description, from, to);
+                    } else {
+                        continue; // Skip unknown task types
+                    }
+                    if (isDone) {
+                        t.markAsDone();
+                    }
+                    tasks.add(t);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+        }
+        return tasks;
+    }   
+
+    public static void printWelcome() {
+        System.out.println("____________________________________________________________");
+        System.out.println(" Hello! I'm Jimmy");
+        System.out.println(" What can I do for you?");
+        System.out.println("____________________________________________________________");
+    }
+
+    public static void run(List<Task> list, Scanner scanner) {
         boolean running = true;
         while (scanner.hasNextLine() && running) {
             String userInput = scanner.nextLine();
@@ -119,48 +168,5 @@ public class Jimmy {
                 System.out.println("____________________________________________________________");
             }
         }
-        scanner.close();
-    }
-
-    public static List<Task> loadTasks(Path filePath) {
-        List<Task> tasks = new ArrayList<>();
-        try {
-            if (Files.exists(filePath)) {
-                List<String> lines = Files.readAllLines(filePath);
-                for (String line : lines) {
-                    String[] parts = line.split(" \\| ");
-                    String type = parts[0];
-                    boolean isDone = parts[1].equals("1");
-                    String description = parts[2];
-                    Task t;
-                    if (type.equals("T")) {
-                        t = new Todo(description);
-                    } else if (type.equals("D")) {
-                        String by = parts[3];
-                        t = new Deadline(description, by);
-                    } else if (type.equals("E")) {
-                        String from = parts[3];
-                        String to = parts[4];
-                        t = new Event(description, from, to);
-                    } else {
-                        continue; // Skip unknown task types
-                    }
-                    if (isDone) {
-                        t.markAsDone();
-                    }
-                    tasks.add(t);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error loading tasks: " + e.getMessage());
-        }
-        return tasks;
-    }   
-
-    public static void printWelcome() {
-        System.out.println("____________________________________________________________");
-        System.out.println(" Hello! I'm Jimmy");
-        System.out.println(" What can I do for you?");
-        System.out.println("____________________________________________________________");
     }
 }
