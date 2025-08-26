@@ -11,10 +11,8 @@ public class Jimmy {
         Path path = Paths.get("data", "jimmy.txt");
         List<Task> list = loadTasks(path);
 
-        System.out.println("____________________________________________________________");
-        System.out.println(" Hello! I'm Jimmy");
-        System.out.println(" What can I do for you?");
-        System.out.println("____________________________________________________________");
+        printWelcome();
+
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         while (scanner.hasNextLine() && running) {
@@ -158,4 +156,11 @@ public class Jimmy {
         }
         return tasks;
     }   
+
+    public static void printWelcome() {
+        System.out.println("____________________________________________________________");
+        System.out.println(" Hello! I'm Jimmy");
+        System.out.println(" What can I do for you?");
+        System.out.println("____________________________________________________________");
+    }
 }
