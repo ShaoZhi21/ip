@@ -2,18 +2,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Jimmy {
     public static void main(String[] args) {
+        // Relative path for txt file
         Path path = Paths.get("data", "jimmy.txt");
+        // Creates task and puts them into a list
         List<Task> list = loadTasks(path);
 
         printWelcome();
 
+        // User input
         Scanner scanner = new Scanner(System.in);
         run(list, scanner);
     }
@@ -86,6 +88,7 @@ public class Jimmy {
                     }
                     int argument = Integer.parseInt(inputParts[1]) - 1;
                     list.get(argument).markAsDone();
+                    saveTasks(list);
                     System.out.println("____________________________________________________________");
                     System.out.print("Nice! I've marked this task as done: ");
                     System.out.print("\n");
@@ -97,6 +100,7 @@ public class Jimmy {
                     }
                     int argument = Integer.parseInt(inputParts[1]) - 1;
                     list.get(argument).markAsNotDone();
+                    saveTasks(list);
                     System.out.println("____________________________________________________________");
                     System.out.print("OK, I've marked this task as not done yet: ");
                     System.out.print("\n");
@@ -108,7 +112,7 @@ public class Jimmy {
                     }
                     Task t = new Todo(inputParts[1]);
                     list.add(t);
-                    saveTask(t);
+                    saveTasks(list);
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
                     System.out.println(t.toString());
@@ -122,7 +126,7 @@ public class Jimmy {
                     String by = inputParts[1].split("/by")[1].trim();
                     Task t = new Deadline(description, by);
                     list.add(t);
-                    saveTask(t);
+                    saveTasks(list);
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
                     System.out.println(t.toString());
@@ -137,7 +141,7 @@ public class Jimmy {
                     String to = inputParts[1].split("/to")[1].trim();
                     Task t = new Event(description, from, to);
                     list.add(t);
-                    saveTask(t);
+                    saveTasks(list);
                     System.out.println("____________________________________________________________");
                     System.out.println("Got it. I've added this task:");
                     System.out.println(t.toString());
@@ -152,6 +156,7 @@ public class Jimmy {
                     int argument = Integer.parseInt(inputParts[1]) - 1;
                     Task removedTask = list.get(argument);
                     list.remove(argument);
+                    saveTasks(list);
                     System.out.println("____________________________________________________________");
                     System.out.println("Noted. I've removed this task:");
                     System.out.println(removedTask.toString());
@@ -170,14 +175,18 @@ public class Jimmy {
             }
         }
     }
-    
-    public static void saveTask(Task t) {
-        String s = t.toFileString();
+
+    // Update jimmy.txt with new list of tasks
+    public static void saveTasks(List<Task> list) {
         Path path = Paths.get("data", "jimmy.txt");
+        List<String> lines = new ArrayList<>();
+        for (Task t : list) {
+            lines.add(t.toFileString());
+        }
         try {
-            Files.write(path, List.of(s), StandardOpenOption.APPEND);       
+            Files.write(path, lines); // overwrites the old file
         } catch (Exception e) {
-            System.out.println("Error saving task: " + e.getMessage());
+            System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
 }
