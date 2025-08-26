@@ -1,0 +1,6 @@
+T | 0 | read book
+D | 0 | return book | June 6th
+E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm
+T | 0 | join sports club
+T | 0 | go public
+D | 1 | do | 29 may
