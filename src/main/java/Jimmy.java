@@ -13,11 +13,12 @@ public class Jimmy {
         // Creates task and puts them into a list
         List<Task> list = loadTasks(path);
 
-        printWelcome();
+        Ui ui = new Ui();
+        ui.showWelcome();
 
         // User input
         Scanner scanner = new Scanner(System.in);
-        run(list, scanner);
+        run(list, scanner, ui);
     }
 
     public static List<Task> loadTasks(Path filePath) {
@@ -65,14 +66,9 @@ public class Jimmy {
         return tasks;
     }   
 
-    public static void printWelcome() {
-        System.out.println("____________________________________________________________");
-        System.out.println(" Hello! I'm Jimmy");
-        System.out.println(" What can I do for you?");
-        System.out.println("____________________________________________________________");
-    }
 
-    public static void run(List<Task> list, Scanner scanner) {
+
+    public static void run(List<Task> list, Scanner scanner, Ui ui) {
         boolean running = true;
         while (scanner.hasNextLine() && running) {
             String userInput = scanner.nextLine();
@@ -80,42 +76,28 @@ public class Jimmy {
                 String[] inputParts = userInput.split(" ", 2);
                 String command = inputParts[0];
                 if (userInput.equals("bye")) {
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Bye. Hope to see you again soon!");
-                    System.out.println("____________________________________________________________");
+                    ui.showGoodbye();
                     running = false;
                 } else if (userInput.equals("list")) {
-                    System.out.println("____________________________________________________________");
-                    for (int i = 0; i < list.size(); i++) {
-                        Task t = list.get(i);
-                        System.out.print((i + 1) + "." + t.toString());
-                        System.out.print("\n");
-                    }
-                    System.out.println("____________________________________________________________");
+                    ui.showTaskList(list);
                 } else if (command.equals("mark")) {
                     if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
                         throw new JimmyException("The description of a mark cannot be empty.");
                     }
                     int argument = Integer.parseInt(inputParts[1]) - 1;
-                    list.get(argument).markAsDone();
+                    Task task = list.get(argument);
+                    task.markAsDone();
                     saveTasks(list);
-                    System.out.println("____________________________________________________________");
-                    System.out.print("Nice! I've marked this task as done: ");
-                    System.out.print("\n");
-                    System.out.println("[" + list.get(argument).getStatusIcon() + "] " + list.get(argument).description);
-                    System.out.println("____________________________________________________________");
+                    ui.showTaskMarkedAsDone(task);
                 } else if (command.equals("unmark")) {
                     if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
                         throw new JimmyException("The description of an unmark cannot be empty.");
                     }
                     int argument = Integer.parseInt(inputParts[1]) - 1;
-                    list.get(argument).markAsNotDone();
+                    Task task = list.get(argument);
+                    task.markAsNotDone();
                     saveTasks(list);
-                    System.out.println("____________________________________________________________");
-                    System.out.print("OK, I've marked this task as not done yet: ");
-                    System.out.print("\n");
-                    System.out.println("[" + list.get(argument).getStatusIcon() + "] " + list.get(argument).description);
-                    System.out.println("____________________________________________________________");
+                    ui.showTaskMarkedAsNotDone(task);
                 } else if (command.equals("todo")) {
                     if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
                         throw new JimmyException("The description of a todo cannot be empty.");
@@ -123,11 +105,7 @@ public class Jimmy {
                     Task t = new Todo(inputParts[1]);
                     list.add(t);
                     saveTasks(list);
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println(t.toString());
-                    System.out.println("Now you have " + list.size() + " tasks in the list.");
-                    System.out.println("____________________________________________________________");
+                    ui.showTaskAdded(t, list.size());
                 } else if (command.equals("deadline")) {
                     if (inputParts.length < 2 || !inputParts[1].contains("/by")) {
                         throw new JimmyException("The description of a deadline must include '/by'.");
@@ -138,11 +116,7 @@ public class Jimmy {
                         Task t = new Deadline(description, by);
                         list.add(t);
                         saveTasks(list);
-                        System.out.println("____________________________________________________________");
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println(t.toString());
-                        System.out.println("Now you have " + list.size() + " tasks in the list.");
-                        System.out.println("____________________________________________________________");
+                        ui.showTaskAdded(t, list.size());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
@@ -157,11 +131,7 @@ public class Jimmy {
                         Task t = new Event(description, from, to);
                         list.add(t);
                         saveTasks(list);
-                        System.out.println("____________________________________________________________");
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println(t.toString());
-                        System.out.println("Now you have " + list.size() + " tasks in the list.");
-                        System.out.println("____________________________________________________________");
+                        ui.showTaskAdded(t, list.size());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
@@ -175,21 +145,13 @@ public class Jimmy {
                     Task removedTask = list.get(argument);
                     list.remove(argument);
                     saveTasks(list);
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Noted. I've removed this task:");
-                    System.out.println(removedTask.toString());
-                    System.out.println("Now you have " + list.size() + " tasks in the list.");
-                    System.out.println("____________________________________________________________");
+                    ui.showTaskDeleted(removedTask, list.size());
                 } else {
                     list.add(new Task(userInput));
-                    System.out.println("____________________________________________________________");
-                    System.out.println("added: " + userInput);
-                    System.out.println("____________________________________________________________");
+                    ui.showTaskAddedSimple(userInput);
                 }
             } catch (JimmyException e) {
-                System.out.println("____________________________________________________________");
-                System.out.println(e.getMessage());
-                System.out.println("____________________________________________________________");
+                ui.showError(e.getMessage());
             }
         }
     }
