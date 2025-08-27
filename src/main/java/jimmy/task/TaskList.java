@@ -101,7 +101,7 @@ public class TaskList {
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks);
     }
-    
+
     /**
      * Checks if the task list is empty.
      *
@@ -110,7 +110,7 @@ public class TaskList {
     public boolean isEmpty() {
         return tasks.isEmpty();
     }
-    
+
     /**
      * Removes all tasks from the list.
      * The list will be empty after this call returns.
@@ -118,7 +118,7 @@ public class TaskList {
     public void clear() {
         tasks.clear();
     }
-    
+
     /**
      * Finds tasks that match the given date string.
      * Searches through Deadline and Event tasks for date matches.
