@@ -2,18 +2,43 @@ package jimmy.command;
 
 import jimmy.exception.JimmyException;
 
+/**
+ * Parses user input commands for the Jimmy task management system.
+ * Provides methods to extract command types and arguments from user input strings.
+ * Supports various command formats and validates input before processing.
+ */
 public class Parser {
     
+    /**
+     * Represents a parsed command with its type and full input.
+     * Contains the extracted command and the complete user input for further processing.
+     */
     public static class ParsedCommand {
+        /** The extracted command type (e.g., "todo", "deadline", "mark") */
         public final String command;
+        
+        /** The complete user input string for further parsing */
         public final String fullInput;  
         
+        /**
+         * Constructs a new ParsedCommand with the specified command and input.
+         *
+         * @param command The extracted command type
+         * @param fullInput The complete user input string
+         */
         public ParsedCommand(String command, String fullInput) {
             this.command = command;
             this.fullInput = fullInput;
         }
     }
     
+    /**
+     * Parses a user input string into a ParsedCommand object.
+     * Splits the input on the first space to separate command from arguments.
+     *
+     * @param userInput The user's input string
+     * @return A ParsedCommand object containing the command and full input
+     */
     public static ParsedCommand parseCommand(String userInput) {
         String[] inputParts = userInput.split(" ", 2);
         String command = inputParts[0];
@@ -22,50 +47,135 @@ public class Parser {
         return new ParsedCommand(command, fullInput);
     }
     
+    /**
+     * Validates if a mark command has valid arguments.
+     * Checks that the command has a non-empty description.
+     *
+     * @param fullInput The full input string after the command
+     * @return true if the mark command is valid, false otherwise
+     */
     public static boolean isValidMarkCommand(String fullInput) {
         return !fullInput.trim().isEmpty();
     }
     
+    /**
+     * Validates if an unmark command has valid arguments.
+     * Checks that the command has a non-empty description.
+     *
+     * @param fullInput The full input string after the command
+     * @return true if the unmark command is valid, false otherwise
+     */
     public static boolean isValidUnmarkCommand(String fullInput) {
         return !fullInput.trim().isEmpty();
     }
     
+    /**
+     * Validates if a todo command has valid arguments.
+     * Checks that the command has a non-empty description.
+     *
+     * @param fullInput The full input string after the command
+     * @return true if the todo command is valid, false otherwise
+     */
     public static boolean isValidTodoCommand(String fullInput) {
         return !fullInput.trim().isEmpty();
     }
     
+    /**
+     * Validates if a deadline command has valid arguments.
+     * Checks that the command contains the required "/by" keyword.
+     *
+     * @param fullInput The full input string after the command
+     * @return true if the deadline command is valid, false otherwise
+     */
     public static boolean isValidDeadlineCommand(String fullInput) {
         return fullInput.contains("/by");
     }
     
+    /**
+     * Validates if an event command has valid arguments.
+     * Checks that the command contains both "/from" and "/to" keywords.
+     *
+     * @param fullInput The full input string after the command
+     * @return true if the event command is valid, false otherwise
+     */
     public static boolean isValidEventCommand(String fullInput) {
         return fullInput.contains("/from") && fullInput.contains("/to");
     }
     
+    /**
+     * Validates if a delete command has valid arguments.
+     * Checks that the command has a non-empty description.
+     *
+     * @param fullInput The full input string after the command
+     * @return true if the delete command is valid, false otherwise
+     */
     public static boolean isValidDeleteCommand(String fullInput) {
         return !fullInput.trim().isEmpty();
     }
     
+    /**
+     * Extracts the description part from a deadline command.
+     * Splits the input on "/by" and returns the part before it.
+     *
+     * @param fullInput The full input string after the deadline command
+     * @return The description part of the deadline
+     */
     public static String extractDeadlineDescription(String fullInput) {
         return fullInput.split("/by")[0].trim();
     }
     
+    /**
+     * Extracts the date part from a deadline command.
+     * Splits the input on "/by" and returns the part after it.
+     *
+     * @param fullInput The full input string after the deadline command
+     * @return The date part of the deadline
+     */
     public static String extractDeadlineDate(String fullInput) {
         return fullInput.split("/by")[1].trim();
     }
     
+    /**
+     * Extracts the description part from an event command.
+     * Splits the input on "/from" and returns the part before it.
+     *
+     * @param fullInput The full input string after the event command
+     * @return The description part of the event
+     */
     public static String extractEventDescription(String fullInput) {
         return fullInput.split("/from")[0].trim();
     }
     
+    /**
+     * Extracts the start time from an event command.
+     * Splits the input on "/from" and "/to" to get the start time.
+     *
+     * @param fullInput The full input string after the event command
+     * @return The start time of the event
+     */
     public static String extractEventFrom(String fullInput) {
         return fullInput.split("/from")[1].split("/to")[0].trim();
     }
     
+    /**
+     * Extracts the end time from an event command.
+     * Splits the input on "/to" and returns the part after it.
+     *
+     * @param fullInput The full input string after the event command
+     * @return The end time of the event
+     */
     public static String extractEventTo(String fullInput) {
         return fullInput.split("/to")[1].trim();
     }
     
+    /**
+     * Parses a task index from the input string.
+     * Converts the string to a 1-based index and validates it.
+     *
+     * @param fullInput The input string containing the task index
+     * @return The 0-based index for internal use
+     * @throws JimmyException if the index is invalid or not a number
+     */
     public static int parseTaskIndex(String fullInput) throws JimmyException {
         try {
             int index = Integer.parseInt(fullInput.trim()) - 1;

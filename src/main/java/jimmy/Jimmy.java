@@ -12,7 +12,20 @@ import jimmy.exception.JimmyException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main class for the Jimmy task management application.
+ * Jimmy is a command-line task manager that allows users to add, mark, unmark,
+ * list, and delete tasks. It supports different types of tasks including
+ * Todo, Deadline, and Event tasks.
+ */
 public class Jimmy {
+    
+    /**
+     * Main entry point for the Jimmy application.
+     * Initializes the storage, UI, and task list, then starts the main application loop.
+     *
+     * @param args Command line arguments (not used)
+     */
     public static void main(String[] args) {
         
         Storage storage = new Storage("data/jimmy.txt");
@@ -28,6 +41,16 @@ public class Jimmy {
         run(taskList, scanner, ui, storage);
     }
 
+    /**
+     * Main application loop that processes user commands.
+     * Continuously reads user input and executes corresponding commands
+     * until the user types "bye".
+     *
+     * @param taskList The list of tasks to manage
+     * @param scanner Scanner for reading user input
+     * @param ui User interface for displaying messages
+     * @param storage Storage system for persisting tasks
+     */
     public static void run(TaskList taskList, Scanner scanner, Ui ui, Storage storage) {
         boolean running = true;
         while (scanner.hasNextLine() && running) {
@@ -109,11 +132,13 @@ public class Jimmy {
                     ui.showTaskDeleted(removedTask, taskList.getSize());
                 } else {
                     taskList.addTask(new Task(userInput));
+                    storage.save(taskList.getAllTasks());
                     ui.showTaskAddedSimple(userInput);
                 }
             } catch (JimmyException e) {
                 ui.showError(e.getMessage());
             }
         }
+        scanner.close();
     }
 }
