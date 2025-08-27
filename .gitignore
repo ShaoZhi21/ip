@@ -8,6 +8,12 @@
 /build/
 src/main/resources/docs/
 
+# Java compiled files
+*.class
+*.jar
+*.war
+*.ear
+
 # MacOS custom attributes files created by Finder
 .DS_Store
 *.iml
