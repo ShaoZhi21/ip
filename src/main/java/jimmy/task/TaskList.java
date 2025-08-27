@@ -3,61 +3,130 @@ package jimmy.task;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Manages a collection of tasks in the Jimmy task management system.
+ * Provides methods to add, remove, mark, and retrieve tasks from the list.
+ * The TaskList maintains the order of tasks and provides size information.
+ */
 public class TaskList {
+    /** The list of tasks */
     private List<Task> tasks;
-    
+
+    /**
+     * Constructs an empty TaskList.
+     */
     public TaskList() {
         this.tasks = new ArrayList<>();
     }
-    
+
+    /**
+     * Constructs a TaskList with the given list of tasks.
+     *
+     * @param tasks The initial list of tasks
+     */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
     }
-    
+
+    /**
+     * Adds a task to the list.
+     *
+     * @param task The task to add
+     */
     public void addTask(Task task) {
         tasks.add(task);
     }
-    
-    public Task getTask(int index) throws IndexOutOfBoundsException {
-        if (index < 0 || index >= tasks.size()) {
-            throw new IndexOutOfBoundsException("Task index " + (index + 1) + " is out of bounds.");
-        }
-        return tasks.get(index);
+
+    /**
+     * Removes a task from the list at the specified index.
+     * The index is 1-based (user-friendly).
+     *
+     * @param index The 1-based index of the task to remove
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public void removeTask(int index) {
+        tasks.remove(index);
     }
-    
-    public Task removeTask(int index) throws IndexOutOfBoundsException {
-        if (index < 0 || index >= tasks.size()) {
-            throw new IndexOutOfBoundsException("Task index " + (index + 1) + " is out of bounds.");
-        }
-        return tasks.remove(index);
-    }
-    
-    public void markTaskAsDone(int index) throws IndexOutOfBoundsException {
-        Task task = getTask(index);
+
+    /**
+     * Marks a task as done at the specified index.
+     * The index is 1-based (user-friendly).
+     *
+     * @param index The 1-based index of the task to mark as done
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public void markTaskAsDone(int index) {
+        Task task = tasks.get(index);
         task.markAsDone();
     }
-    
-    public void markTaskAsNotDone(int index) throws IndexOutOfBoundsException {
-        Task task = getTask(index);
+
+    /**
+     * Marks a task as not done at the specified index.
+     * The index is 1-based (user-friendly).
+     *
+     * @param index The 1-based index of the task to mark as not done
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public void markTaskAsNotDone(int index) {
+        Task task = tasks.get(index);
         task.markAsNotDone();
     }
-    
+
+    /**
+     * Returns the task at the specified index.
+     * The index is 1-based (user-friendly).
+     *
+     * @param index The 1-based index of the task to retrieve
+     * @return The task at the specified index
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public Task getTask(int index) {
+        return tasks.get(index);
+    }
+
+    /**
+     * Returns the current number of tasks in the list.
+     *
+     * @return The number of tasks
+     */
     public int getSize() {
         return tasks.size();
     }
-    
+
+    /**
+     * Returns all tasks in the list.
+     *
+     * @return A list containing all tasks
+     */
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks);
     }
     
+    /**
+     * Checks if the task list is empty.
+     *
+     * @return true if the list contains no tasks, false otherwise
+     */
     public boolean isEmpty() {
         return tasks.isEmpty();
     }
     
+    /**
+     * Removes all tasks from the list.
+     * The list will be empty after this call returns.
+     */
     public void clear() {
         tasks.clear();
     }
     
+    /**
+     * Finds tasks that match the given date string.
+     * Searches through Deadline and Event tasks for date matches.
+     * Supports multiple date formats: dd/MM/yyyy, yyyy-MM-dd, dd-MM-yyyy.
+     *
+     * @param dateStr The date string to search for
+     * @return A list of tasks that match the given date
+     */
     public List<Task> findTasksByDate(String dateStr) {
         List<Task> matchingTasks = new ArrayList<>();
         
