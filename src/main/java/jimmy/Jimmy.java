@@ -14,7 +14,6 @@ import java.util.Scanner;
 
 public class Jimmy {
     public static void main(String[] args) {
-        
         Storage storage = new Storage("data/jimmy.txt");
         Ui ui = new Ui();
         
@@ -63,10 +62,10 @@ public class Jimmy {
                     if (!Parser.isValidTodoCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a todo cannot be empty.");
                     }
-                    Task t = new Todo(parsed.fullInput);
-                    taskList.addTask(t);
+                    Task task = new Todo(parsed.fullInput);
+                    taskList.addTask(task);
                     storage.save(taskList.getAllTasks());
-                    ui.showTaskAdded(t, taskList.getSize());
+                    ui.showTaskAdded(task, taskList.getSize());
                 } else if (command.equals("deadline")) {
                     if (!Parser.isValidDeadlineCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a deadline must include '/by'.");
@@ -74,10 +73,10 @@ public class Jimmy {
                     String description = Parser.extractDeadlineDescription(parsed.fullInput);
                     String by = Parser.extractDeadlineDate(parsed.fullInput);
                     try {
-                        Task t = new Deadline(description, by);
-                        taskList.addTask(t);
+                        Task task = new Deadline(description, by);
+                        taskList.addTask(task);
                         storage.save(taskList.getAllTasks());
-                        ui.showTaskAdded(t, taskList.getSize());
+                        ui.showTaskAdded(task, taskList.getSize());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
@@ -89,10 +88,10 @@ public class Jimmy {
                     String from = Parser.extractEventFrom(parsed.fullInput);
                     String to = Parser.extractEventTo(parsed.fullInput);
                     try {
-                        Task t = new Event(description, from, to);
-                        taskList.addTask(t);
+                        Task task = new Event(description, from, to);
+                        taskList.addTask(task);
                         storage.save(taskList.getAllTasks());
-                        ui.showTaskAdded(t, taskList.getSize());
+                        ui.showTaskAdded(task, taskList.getSize());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
@@ -108,12 +107,15 @@ public class Jimmy {
                     storage.save(taskList.getAllTasks());
                     ui.showTaskDeleted(removedTask, taskList.getSize());
                 } else {
-                    taskList.addTask(new Task(userInput));
+                    Task task = new Task(userInput);
+                    taskList.addTask(task);
+                    storage.save(taskList.getAllTasks());
                     ui.showTaskAddedSimple(userInput);
                 }
             } catch (JimmyException e) {
                 ui.showError(e.getMessage());
             }
         }
+        scanner.close();
     }
 }

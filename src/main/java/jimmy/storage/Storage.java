@@ -36,17 +36,17 @@ public class Storage {
                     String type = parts[0];
                     boolean isDone = parts[1].equals("1");
                     String description = parts[2];
-                    Task t;
+                    Task task;
                     
                     if (type.equals("T")) {
-                        t = new Todo(description);
+                        task = new Todo(description);
                     } else if (type.equals("D")) {
                         if (parts.length < 4) {
                             continue; 
                         }
                         String by = parts[3];
                         try {
-                            t = new Deadline(description, by);
+                            task = new Deadline(description, by);
                         } catch (IllegalArgumentException e) {
                             System.out.println("Warning: Could not parse deadline date '" + by + "' for task: " + description);
                             continue; 
@@ -58,7 +58,7 @@ public class Storage {
                         String from = parts[3];
                         String to = parts[4];
                         try {
-                            t = new Event(description, from, to);
+                            task = new Event(description, from, to);
                         } catch (IllegalArgumentException e) {
                             System.out.println("Warning: Could not parse event dates for task: " + description);
                             continue; 
@@ -68,9 +68,9 @@ public class Storage {
                     }
                     
                     if (isDone) {
-                        t.markAsDone();
+                        task.markAsDone();
                     }
-                    tasks.add(t);
+                    tasks.add(task);
                 }
             }
         } catch (IOException e) {
@@ -81,8 +81,8 @@ public class Storage {
 
     public void save(List<Task> tasks) {
         List<String> lines = new ArrayList<>();
-        for (Task t : tasks) {
-            lines.add(t.toFileString());
+        for (Task task : tasks) {
+            lines.add(task.toFileString());
         }
         try {
             Files.write(filePath, lines); 
