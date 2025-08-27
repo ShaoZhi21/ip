@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'checkstyle'
 }
 
 java {
@@ -43,4 +44,20 @@ shadowJar {
 
 run{
     standardInput = System.in
+}
+
+checkstyle {
+    toolVersion = '10.12.5'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
+
+checkstyleTest {
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = false
+        html.required = true
+    }
 }

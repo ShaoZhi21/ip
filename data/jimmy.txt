@@ -1,6 +1,9 @@
-T | 0 | read book
-D | 0 | return book | June 6th
-E | 0 | project meeting | Aug 6th 2pm | Aug 6th 4pm
-T | 0 | join sports club
-T | 0 | go public
-D | 1 | do | 29 may
+T | 1 | join sports club
+T | 1 | go public
+T | 1 | read book
+T | 0 | test
+D | 0 | deadline submit report | 2024-12-15T23:59:00
+D | 0 | deadline submit report | 2024-12-20T18:00:00
+E | 0 | event team meeting | 2024-12-25T14:00:00 | 2024-12-25T16:00:00
+D | 0 | cs2103 | 2025-08-29T18:00:00
+0 | remove 9
