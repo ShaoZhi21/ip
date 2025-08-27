@@ -46,6 +46,10 @@ public class Parser {
         return !fullInput.trim().isEmpty();
     }
     
+    public static boolean isValidFindCommand(String fullInput) {
+        return !fullInput.trim().isEmpty();
+    }
+    
     public static String extractDeadlineDescription(String fullInput) {
         return fullInput.split("/by")[0].trim();
     }

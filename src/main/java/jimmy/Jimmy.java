@@ -96,6 +96,12 @@ public class Jimmy {
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
+                } else if (command.equals("find")) {
+                    if (!Parser.isValidFindCommand(parsed.fullInput)) {
+                        throw new JimmyException("The description of a find cannot be empty.");
+                    }
+                    java.util.List<Task> matches = taskList.findByKeyword(parsed.fullInput);
+                    ui.showMatchingTasks(matches);
                 } else if (command.equals("blah")) {
                     throw new JimmyException("I don't know what blah is. Bleh.");
                 } else if (command.equals("delete")) {
