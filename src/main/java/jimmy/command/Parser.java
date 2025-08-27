@@ -113,6 +113,10 @@ public class Parser {
         return !fullInput.trim().isEmpty();
     }
     
+    public static boolean isValidFindCommand(String fullInput) {
+        return !fullInput.trim().isEmpty();
+    }
+    
     /**
      * Extracts the description part from a deadline command.
      * Splits the input on "/by" and returns the part before it.

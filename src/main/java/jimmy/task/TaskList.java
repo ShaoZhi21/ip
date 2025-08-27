@@ -177,4 +177,15 @@ public class TaskList {
         
         return matchingTasks;
     }
+
+    public List<Task> findByKeyword(String keyword) {
+        List<Task> matches = new ArrayList<>();
+        String query = keyword.toLowerCase().trim();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(query)) {
+                matches.add(task);
+            }
+        }
+        return matches;
+    }
 }

@@ -158,4 +158,15 @@ public class Ui {
     public void showWarning(String message) {
         System.out.println("Warning: " + message);
     }
+
+    public void showMatchingTasks(java.util.List<jimmy.task.Task> tasks) {
+        System.out.println("____________________________________________________________");
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            jimmy.task.Task t = tasks.get(i);
+            System.out.print((i + 1) + "." + t.toString());
+            System.out.print("\n");
+        }
+        System.out.println("____________________________________________________________");
+    }
 }
