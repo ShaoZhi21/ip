@@ -99,7 +99,7 @@ public class Parser {
      * @return true if the event command is valid, false otherwise
      */
     public static boolean isValidEventCommand(String fullInput) {
-        return fullInput.contains("/from") && fullInput.contains("/to");
+        return containsAllKeywords(fullInput, "/from", "/to");
     }
     
     /**
@@ -115,6 +115,23 @@ public class Parser {
     
     public static boolean isValidFindCommand(String fullInput) {
         return !fullInput.trim().isEmpty();
+    }
+
+    /**
+     * Validates if a command contains all required keywords.
+     * Uses varargs to check for multiple required keywords in a single call.
+     *
+     * @param fullInput The full input string to validate
+     * @param requiredKeywords The required keywords to check for (varargs)
+     * @return true if all required keywords are present, false otherwise
+     */
+    public static boolean containsAllKeywords(String fullInput, String... requiredKeywords) {
+        for (String keyword : requiredKeywords) {
+            if (!fullInput.contains(keyword)) {
+                return false;
+            }
+        }
+        return true;
     }
     
     /**
