@@ -38,7 +38,7 @@ public class Task {
      *
      * @return "X" for completed tasks, " " for incomplete tasks
      */
-    public String getStatusIcon(){
+    public String getStatusIcon() {
         return (isDone ? "X" : " ");
     }
 
