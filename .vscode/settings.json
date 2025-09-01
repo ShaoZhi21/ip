@@ -1,0 +1,24 @@
+{
+    "java.home": "/Users/soongshaozhi/.sdkman/candidates/java/current",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-17",
+            "path": "/Users/soongshaozhi/.sdkman/candidates/java/current",
+            "default": true
+        }
+    ],
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.project.sourcePaths": ["src/main/java"],
+    "java.project.outputPath": "build/classes",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ],
+    "java.import.gradle.enabled": true,
+    "java.import.gradle.wrapper.enabled": true,
+    "java.import.gradle.version": "8.5",
+    "java.import.gradle.offline.enabled": false,
+    "java.import.gradle.arguments": [
+        "--add-modules", "javafx.controls,javafx.fxml"
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
+}
