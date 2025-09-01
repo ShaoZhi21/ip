@@ -38,6 +38,17 @@ public class TaskList {
     }
 
     /**
+     * Adds multiple tasks to the list using varargs.
+     *
+     * @param tasks The tasks to add (varargs)
+     */
+    public void addTasks(Task... tasks) {
+        for (Task task : tasks) {
+            this.tasks.add(task);
+        }
+    }
+
+    /**
      * Removes a task from the list at the specified index.
      * The index is 1-based (user-friendly).
      *

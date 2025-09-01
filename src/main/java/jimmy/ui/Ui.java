@@ -15,10 +15,10 @@ public class Ui {
      * Shows a formatted greeting with the application name.
      */
     public void showWelcome() {
-        System.out.println("____________________________________________________________");
-        System.out.println(" Hello! I'm Jimmy");
-        System.out.println(" What can I do for you?");
-        System.out.println("____________________________________________________________");
+        showFormattedLines(
+            " Hello! I'm Jimmy",
+            " What can I do for you?"
+        );
     }
     
     /**
@@ -26,9 +26,7 @@ public class Ui {
      * Shows a formatted farewell message.
      */
     public void showGoodbye() {
-        System.out.println("____________________________________________________________");
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println("____________________________________________________________");
+        showFormattedLines("Bye. Hope to see you again soon!");
     }
     
     /**
@@ -121,11 +119,13 @@ public class Ui {
      * Displays an error message to the user.
      * Shows the error message in a formatted box.
      *
-     * @param message The error message to display
+     * @param messages The error messages to display (varargs)
      */
-    public void showError(String message) {
+    public void showError(String... messages) {
         System.out.println("____________________________________________________________");
-        System.out.println(message);
+        for (String message : messages) {
+            System.out.println(message);
+        }
         System.out.println("____________________________________________________________");
     }
     
@@ -150,13 +150,15 @@ public class Ui {
     }
     
     /**
-     * Displays a warning message to the user.
-     * Shows the warning without the formatted box for system-level messages.
+     * Displays warning messages to the user.
+     * Shows the warnings without the formatted box for system-level messages.
      *
-     * @param message The warning message to display
+     * @param messages The warning messages to display (varargs)
      */
-    public void showWarning(String message) {
-        System.out.println("Warning: " + message);
+    public void showWarning(String... messages) {
+        for (String message : messages) {
+            System.out.println("Warning: " + message);
+        }
     }
 
     public void showMatchingTasks(java.util.List<jimmy.task.Task> tasks) {
@@ -166,6 +168,20 @@ public class Ui {
             jimmy.task.Task t = tasks.get(i);
             System.out.print((i + 1) + "." + t.toString());
             System.out.print("\n");
+        }
+        System.out.println("____________________________________________________________");
+    }
+
+    /**
+     * Displays multiple formatted lines with consistent formatting.
+     * Uses varargs to accept any number of lines to display.
+     *
+     * @param lines The lines to display (varargs)
+     */
+    public void showFormattedLines(String... lines) {
+        System.out.println("____________________________________________________________");
+        for (String line : lines) {
+            System.out.println(line);
         }
         System.out.println("____________________________________________________________");
     }
