@@ -147,4 +147,11 @@ public class Jimmy {
         }
         scanner.close();
     }
+
+    /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        return "Jimmy heard: " + input;
+    }
 }
