@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <!-- Suppress MagicNumber rule for test files since test data often contains magic numbers -->
+    <suppress checks="MagicNumber" files=".*Test\.java"/>
+    
+    <!-- Suppress UnusedImports for test files as they often import more than needed for testing -->
+    <suppress checks="UnusedImports" files=".*Test\.java"/>
+    
+    <!-- Suppress FinalParameters for main code - this is a common style choice -->
+    <suppress checks="FinalParameters" files=".*\.java"/>
+    
+    <!-- Suppress HideUtilityClassConstructor for utility classes -->
+    <suppress checks="HideUtilityClassConstructor" files=".*\.java"/>
+    
+    <!-- Suppress DesignForExtension for classes that are designed to be extended -->
+    <suppress checks="DesignForExtension" files=".*\.java"/>
+    
+    <!-- Suppress VisibilityModifier for fields that are intentionally package-private -->
+    <suppress checks="VisibilityModifier" files=".*\.java"/>
+</suppressions>

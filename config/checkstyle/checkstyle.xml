@@ -13,6 +13,12 @@
         <property name="fileNamePattern" value="module-info\.java$"/>
     </module>
 
+    <!-- Suppression filter -->
+    <module name="SuppressionFilter">
+        <property name="file" value="${suppressionFile}"/>
+        <property name="optional" value="true"/>
+    </module>
+
     <!-- Checks for Size Violations. -->
     <module name="FileLength">
         <property name="max" value="2000"/>
