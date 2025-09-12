@@ -19,6 +19,8 @@ import java.util.Scanner;
  * Todo, Deadline, and Event tasks.
  */
 public class Jimmy {
+    private TaskList guiTaskList; // persisted across GUI inputs
+    private Storage guiStorage;
     
     /**
      * Main entry point for the Jimmy application.
@@ -152,6 +154,21 @@ public class Jimmy {
      * Generates a response for the user's chat message.
      */
     public String getResponse(String input) {
-        return "Jimmy heard: " + input;
+        if (guiStorage == null || guiTaskList == null) {
+            guiStorage = new Storage("data/jimmy.txt");
+            java.util.List<Task> loaded = guiStorage.load();
+            guiTaskList = new TaskList(loaded);
+        }
+
+        StringBuilder out = new StringBuilder();
+        jimmy.ui.GuiUi guiUi = new jimmy.ui.GuiUi(out);
+        try {
+            // Process exactly one line using the same logic as CLI
+            Scanner singleLine = new Scanner(input + "\n");
+            run(guiTaskList, singleLine, guiUi, guiStorage);
+        } finally {
+            // no-op
+        }
+        return out.toString().trim();
     }
 }
