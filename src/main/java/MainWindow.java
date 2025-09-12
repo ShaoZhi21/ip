@@ -20,8 +20,8 @@ public class MainWindow extends AnchorPane {
 
     private jimmy.Jimmy jimmy;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/dudu.jpg"));
+    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/bubu.jpg"));
 
     @FXML
     public void initialize() {
@@ -41,9 +41,11 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = jimmy.getResponse(input);
+        String userLabelled = "Dudu: " + input;
+        String botLabelled = "Bubu: " + response;
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
+                DialogBox.getUserDialog(userLabelled, userImage),
+                DialogBox.getDukeDialog(botLabelled, dukeImage)
         );
         userInput.clear();
     }

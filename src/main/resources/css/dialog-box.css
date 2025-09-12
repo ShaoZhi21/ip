@@ -1,0 +1,29 @@
+/* Base bubble look */
+.label {
+    -fx-padding: 10px 14px;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+}
+
+/* User (Bubu) bubble: soft brown */
+.bubu-label {
+    -fx-background-color: #D9B99B; /* light brown */
+    -fx-text-fill: #2b2b2b;
+}
+
+/* Bot (Dudu) bubble: white */
+.dudu-label {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #2b2b2b;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+}
+
+#displayPicture {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-rotate: 0;
+}
+
+
