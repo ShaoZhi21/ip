@@ -198,9 +198,27 @@ public class TaskList {
     }
 
     public List<Task> findByKeyword(String keyword) {
-        String query = keyword.toLowerCase().trim();
+        if (keyword == null || keyword.isBlank()) {
+            return new ArrayList<>();
+        }
+        String[] tokens = keyword.toLowerCase().trim().split("\\s+");
+
         return tasks.stream()
-                .filter(t -> t.getDescription().toLowerCase().contains(query))
+                .filter(task -> {
+                    StringBuilder sb = new StringBuilder(task.getDescription().toLowerCase());
+                    if (task instanceof Deadline) {
+                        Deadline d = (Deadline) task;
+                        sb.append(' ').append(String.valueOf(d.getBy()));
+                    } else if (task instanceof Event) {
+                        Event e = (Event) task;
+                        sb.append(' ').append(String.valueOf(e.getFrom()))
+                          .append(' ').append(String.valueOf(e.getTo()));
+                    }
+
+                    String haystack = sb.toString();
+                    // Match if ALL tokens are present somewhere (order-insensitive, partial allowed)
+                    return java.util.Arrays.stream(tokens).allMatch(haystack::contains);
+                })
                 .collect(Collectors.toList());
     }
 }
