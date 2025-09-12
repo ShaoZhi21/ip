@@ -32,6 +32,7 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
 
+        assert img != null : "Avatar image must not be null";
         dialog.setText(text);
         displayPicture.setImage(img);
     }

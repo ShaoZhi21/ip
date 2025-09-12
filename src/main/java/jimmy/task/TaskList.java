@@ -34,7 +34,9 @@ public class TaskList {
      * @param task The task to add
      */
     public void addTask(Task task) {
+        assert task != null : "Task to add must not be null";
         tasks.add(task);
+        assert tasks.size() > 0 : "Task list size should be positive after add";
     }
 
     /**
@@ -44,6 +46,7 @@ public class TaskList {
      */
     public void addTasks(Task... tasks) {
         for (Task task : tasks) {
+            assert task != null : "Vararg task must not be null";
             this.tasks.add(task);
         }
     }
@@ -56,6 +59,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void removeTask(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for remove";
         tasks.remove(index);
     }
 
@@ -67,6 +71,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void markTaskAsDone(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for mark";
         Task task = tasks.get(index);
         task.markAsDone();
     }
@@ -79,6 +84,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void markTaskAsNotDone(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for unmark";
         Task task = tasks.get(index);
         task.markAsNotDone();
     }
@@ -92,6 +98,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public Task getTask(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for getTask";
         return tasks.get(index);
     }
 

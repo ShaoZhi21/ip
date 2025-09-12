@@ -31,6 +31,7 @@ public class Storage {
      */
     public Storage(String filePath) {
         this.filePath = Paths.get(filePath);
+        assert this.filePath != null : "Storage path must not be null";
     }
 
     /**
@@ -98,6 +99,7 @@ public class Storage {
         } catch (IOException e) {
             System.out.println("Error loading tasks: " + e.getMessage());
         }
+        assert tasks != null : "Loaded tasks list must not be null";
         return tasks;
     }
 
@@ -109,8 +111,10 @@ public class Storage {
      * @param tasks The list of tasks to save
      */
     public void save(List<Task> tasks) {
+        assert tasks != null : "Tasks to save must not be null";
         List<String> lines = new ArrayList<>();
         for (Task task : tasks) {
+            assert task != null : "Task in list must not be null";
             lines.add(task.toFileString());
         }
         try {

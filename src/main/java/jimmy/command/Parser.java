@@ -40,9 +40,12 @@ public class Parser {
      * @return A ParsedCommand object containing the command and full input
      */
     public static ParsedCommand parseCommand(String userInput) {
+        assert userInput != null : "Input must not be null";
+        assert !userInput.isEmpty() : "Input must not be empty";
         String[] inputParts = userInput.split(" ", 2);
         String command = inputParts[0];
         String fullInput = inputParts.length > 1 ? inputParts[1] : "";
+        assert command != null && !command.isEmpty() : "Command must be present";
         
         return new ParsedCommand(command, fullInput);
     }
