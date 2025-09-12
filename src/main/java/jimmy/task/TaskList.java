@@ -2,6 +2,7 @@ package jimmy.task;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Manages a collection of tasks in the Jimmy task management system.
@@ -197,13 +198,9 @@ public class TaskList {
     }
 
     public List<Task> findByKeyword(String keyword) {
-        List<Task> matches = new ArrayList<>();
         String query = keyword.toLowerCase().trim();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(query)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(t -> t.getDescription().toLowerCase().contains(query))
+                .collect(Collectors.toList());
     }
 }
