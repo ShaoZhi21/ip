@@ -8,6 +8,11 @@ import jimmy.exception.JimmyException;
  * Supports various command formats and validates input before processing.
  */
 public class Parser {
+    private static final String KEY_BY = "/by";
+    private static final String KEY_FROM = "/from";
+    private static final String KEY_TO = "/to";
+    private static final String ERR_POSITIVE_INDEX = "Task index must be a positive number.";
+    private static final String ERR_VALID_NUMBER = "Task index must be a valid number.";
     
     /**
      * Represents a parsed command with its type and full input.
@@ -40,9 +45,12 @@ public class Parser {
      * @return A ParsedCommand object containing the command and full input
      */
     public static ParsedCommand parseCommand(String userInput) {
+        assert userInput != null : "Input must not be null";
+        assert !userInput.isEmpty() : "Input must not be empty";
         String[] inputParts = userInput.split(" ", 2);
         String command = inputParts[0];
         String fullInput = inputParts.length > 1 ? inputParts[1] : "";
+        assert command != null && !command.isEmpty() : "Command must be present";
         
         return new ParsedCommand(command, fullInput);
     }
@@ -88,7 +96,7 @@ public class Parser {
      * @return true if the deadline command is valid, false otherwise
      */
     public static boolean isValidDeadlineCommand(String fullInput) {
-        return fullInput.contains("/by");
+        return fullInput.contains(KEY_BY);
     }
     
     /**
@@ -99,7 +107,7 @@ public class Parser {
      * @return true if the event command is valid, false otherwise
      */
     public static boolean isValidEventCommand(String fullInput) {
-        return containsAllKeywords(fullInput, "/from", "/to");
+        return containsAllKeywords(fullInput, KEY_FROM, KEY_TO);
     }
     
     /**
@@ -142,7 +150,7 @@ public class Parser {
      * @return The description part of the deadline
      */
     public static String extractDeadlineDescription(String fullInput) {
-        return fullInput.split("/by")[0].trim();
+        return fullInput.split(KEY_BY)[0].trim();
     }
     
     /**
@@ -153,7 +161,7 @@ public class Parser {
      * @return The date part of the deadline
      */
     public static String extractDeadlineDate(String fullInput) {
-        return fullInput.split("/by")[1].trim();
+        return fullInput.split(KEY_BY)[1].trim();
     }
     
     /**
@@ -164,7 +172,7 @@ public class Parser {
      * @return The description part of the event
      */
     public static String extractEventDescription(String fullInput) {
-        return fullInput.split("/from")[0].trim();
+        return fullInput.split(KEY_FROM)[0].trim();
     }
     
     /**
@@ -175,7 +183,7 @@ public class Parser {
      * @return The start time of the event
      */
     public static String extractEventFrom(String fullInput) {
-        return fullInput.split("/from")[1].split("/to")[0].trim();
+        return fullInput.split(KEY_FROM)[1].split(KEY_TO)[0].trim();
     }
     
     /**
@@ -186,7 +194,7 @@ public class Parser {
      * @return The end time of the event
      */
     public static String extractEventTo(String fullInput) {
-        return fullInput.split("/to")[1].trim();
+        return fullInput.split(KEY_TO)[1].trim();
     }
     
     /**
@@ -198,14 +206,21 @@ public class Parser {
      * @throws JimmyException if the index is invalid or not a number
      */
     public static int parseTaskIndex(String fullInput) throws JimmyException {
+        String trimmed = fullInput.trim();
+        boolean isNumber;
         try {
-            int index = Integer.parseInt(fullInput.trim()) - 1;
-            if (index < 0) {
-                throw new JimmyException("Task index must be a positive number.");
-            }
-            return index;
+            Integer.parseInt(trimmed);
+            isNumber = true;
         } catch (NumberFormatException e) {
-            throw new JimmyException("Task index must be a valid number.");
+            isNumber = false;
         }
+        if (!isNumber) {
+            throw new JimmyException(ERR_VALID_NUMBER);
+        }
+        int index = Integer.parseInt(trimmed) - 1;
+        if (index < 0) {
+            throw new JimmyException(ERR_POSITIVE_INDEX);
+        }
+        return index;
     }
 }

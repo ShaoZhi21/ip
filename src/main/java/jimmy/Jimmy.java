@@ -19,6 +19,43 @@ import java.util.Scanner;
  * Todo, Deadline, and Event tasks.
  */
 public class Jimmy {
+    /**
+     * Command keywords supported by the application.
+     * Using an enum avoids magic strings and reduces deep nesting.
+     */
+    private enum CommandKeyword {
+        BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, FIND, DELETE, BLAH, UNKNOWN
+    }
+
+    private static CommandKeyword toKeyword(String word) {
+        if (word == null) {
+            return CommandKeyword.UNKNOWN;
+        }
+        switch (word) {
+        case "bye":
+            return CommandKeyword.BYE;
+        case "list":
+            return CommandKeyword.LIST;
+        case "mark":
+            return CommandKeyword.MARK;
+        case "unmark":
+            return CommandKeyword.UNMARK;
+        case "todo":
+            return CommandKeyword.TODO;
+        case "deadline":
+            return CommandKeyword.DEADLINE;
+        case "event":
+            return CommandKeyword.EVENT;
+        case "find":
+            return CommandKeyword.FIND;
+        case "delete":
+            return CommandKeyword.DELETE;
+        case "blah":
+            return CommandKeyword.BLAH;
+        default:
+            return CommandKeyword.UNKNOWN;
+        }
+    }
     private TaskList guiTaskList; // persisted across GUI inputs
     private Storage guiStorage;
     
@@ -59,89 +96,102 @@ public class Jimmy {
             try {
                 Parser.ParsedCommand parsed = Parser.parseCommand(userInput);
                 String command = parsed.command;
-                
-                if (userInput.equals("bye")) {
+                CommandKeyword keyword = toKeyword(command);
+
+                switch (keyword) {
+                case BYE:
                     ui.showGoodbye();
                     running = false;
-                } else if (userInput.equals("list")) {
+                    break;
+                case LIST:
                     ui.showTaskList(taskList.getAllTasks());
-                } else if (command.equals("mark")) {
+                    break;
+                case MARK:
                     if (!Parser.isValidMarkCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a mark cannot be empty.");
                     }
-                    int argument = Parser.parseTaskIndex(parsed.fullInput);
-                    Task task = taskList.getTask(argument);
-                    taskList.markTaskAsDone(argument);
+                    int markIndex = Parser.parseTaskIndex(parsed.fullInput);
+                    Task markedTask = taskList.getTask(markIndex);
+                    taskList.markTaskAsDone(markIndex);
                     storage.save(taskList.getAllTasks());
-                    ui.showTaskMarkedAsDone(task);
-                } else if (command.equals("unmark")) {
+                    ui.showTaskMarkedAsDone(markedTask);
+                    break;
+                case UNMARK:
                     if (!Parser.isValidUnmarkCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of an unmark cannot be empty.");
                     }
-                    int argument = Parser.parseTaskIndex(parsed.fullInput);
-                    Task task = taskList.getTask(argument);
-                    taskList.markTaskAsNotDone(argument);
+                    int unmarkIndex = Parser.parseTaskIndex(parsed.fullInput);
+                    Task unmarkedTask = taskList.getTask(unmarkIndex);
+                    taskList.markTaskAsNotDone(unmarkIndex);
                     storage.save(taskList.getAllTasks());
-                    ui.showTaskMarkedAsNotDone(task);
-                } else if (command.equals("todo")) {
+                    ui.showTaskMarkedAsNotDone(unmarkedTask);
+                    break;
+                case TODO:
                     if (!Parser.isValidTodoCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a todo cannot be empty.");
                     }
-                    Task task = new Todo(parsed.fullInput);
-                    taskList.addTask(task);
+                    Task todoTask = new Todo(parsed.fullInput);
+                    taskList.addTask(todoTask);
                     storage.save(taskList.getAllTasks());
-                    ui.showTaskAdded(task, taskList.getSize());
-                } else if (command.equals("deadline")) {
+                    ui.showTaskAdded(todoTask, taskList.getSize());
+                    break;
+                case DEADLINE:
                     if (!Parser.isValidDeadlineCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a deadline must include '/by'.");
                     }
-                    String description = Parser.extractDeadlineDescription(parsed.fullInput);
+                    String deadlineDesc = Parser.extractDeadlineDescription(parsed.fullInput);
                     String by = Parser.extractDeadlineDate(parsed.fullInput);
                     try {
-                        Task task = new Deadline(description, by);
-                        taskList.addTask(task);
+                        Task deadlineTask = new Deadline(deadlineDesc, by);
+                        taskList.addTask(deadlineTask);
                         storage.save(taskList.getAllTasks());
-                        ui.showTaskAdded(task, taskList.getSize());
+                        ui.showTaskAdded(deadlineTask, taskList.getSize());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
-                } else if (command.equals("event")) {
+                    break;
+                case EVENT:
                     if (!Parser.isValidEventCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of an event must include '/from' and '/to'.");
                     }
-                    String description = Parser.extractEventDescription(parsed.fullInput);
+                    String eventDesc = Parser.extractEventDescription(parsed.fullInput);
                     String from = Parser.extractEventFrom(parsed.fullInput);
                     String to = Parser.extractEventTo(parsed.fullInput);
                     try {
-                        Task task = new Event(description, from, to);
-                        taskList.addTask(task);
+                        Task eventTask = new Event(eventDesc, from, to);
+                        taskList.addTask(eventTask);
                         storage.save(taskList.getAllTasks());
-                        ui.showTaskAdded(task, taskList.getSize());
+                        ui.showTaskAdded(eventTask, taskList.getSize());
                     } catch (IllegalArgumentException e) {
                         throw new JimmyException("Invalid date format: " + e.getMessage());
                     }
-                } else if (command.equals("find")) {
+                    break;
+                case FIND:
                     if (!Parser.isValidFindCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a find cannot be empty.");
                     }
                     java.util.List<Task> matches = taskList.findByKeyword(parsed.fullInput);
                     ui.showMatchingTasks(matches);
-                } else if (command.equals("blah")) {
+                    break;
+                case BLAH:
                     throw new JimmyException("I don't know what blah is. Bleh.");
-                } else if (command.equals("delete")) {
+                case DELETE:
                     if (!Parser.isValidDeleteCommand(parsed.fullInput)) {
                         throw new JimmyException("The description of a delete cannot be empty.");
                     }
-                    int argument = Parser.parseTaskIndex(parsed.fullInput);
-                    Task removedTask = taskList.getTask(argument);
-                    taskList.removeTask(argument);
+                    int deleteIndex = Parser.parseTaskIndex(parsed.fullInput);
+                    Task removedTask = taskList.getTask(deleteIndex);
+                    taskList.removeTask(deleteIndex);
                     storage.save(taskList.getAllTasks());
                     ui.showTaskDeleted(removedTask, taskList.getSize());
-                } else {
-                    Task task = new Task(userInput);
-                    taskList.addTask(task);
+                    break;
+                case UNKNOWN:
+                default:
+                    Task addedTask = new Task(userInput);
+                    taskList.addTask(addedTask);
                     storage.save(taskList.getAllTasks());
                     ui.showTaskAddedSimple(userInput);
+                    break;
                 }
             } catch (JimmyException e) {
                 ui.showError(e.getMessage());

@@ -34,7 +34,9 @@ public class TaskList {
      * @param task The task to add
      */
     public void addTask(Task task) {
+        assert task != null : "Task to add must not be null";
         tasks.add(task);
+        assert tasks.size() > 0 : "Task list size should be positive after add";
     }
 
     /**
@@ -44,54 +46,59 @@ public class TaskList {
      */
     public void addTasks(Task... tasks) {
         for (Task task : tasks) {
+            assert task != null : "Vararg task must not be null";
             this.tasks.add(task);
         }
     }
 
     /**
      * Removes a task from the list at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to remove
+     * @param index The 0-based index of the task to remove
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void removeTask(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for remove";
         tasks.remove(index);
     }
 
     /**
      * Marks a task as done at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to mark as done
+     * @param index The 0-based index of the task to mark as done
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void markTaskAsDone(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for mark";
         Task task = tasks.get(index);
         task.markAsDone();
     }
 
     /**
      * Marks a task as not done at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to mark as not done
+     * @param index The 0-based index of the task to mark as not done
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void markTaskAsNotDone(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for unmark";
         Task task = tasks.get(index);
         task.markAsNotDone();
     }
 
     /**
      * Returns the task at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to retrieve
+     * @param index The 0-based index of the task to retrieve
      * @return The task at the specified index
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public Task getTask(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds for getTask";
         return tasks.get(index);
     }
 
