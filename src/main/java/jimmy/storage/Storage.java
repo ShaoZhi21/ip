@@ -21,7 +21,7 @@ import java.util.Scanner;
  */
 public class Storage {
     /** The file path where tasks are stored */
-    private Path filePath;
+    private final Path filePath;
 
     /**
      * Constructs a new Storage object with the specified file path.
@@ -87,6 +87,7 @@ public class Storage {
                             continue; 
                         }
                     } else {
+                        // unknown record type; skip defensively
                         continue; 
                     }
                     
@@ -112,7 +113,7 @@ public class Storage {
      */
     public void save(List<Task> tasks) {
         assert tasks != null : "Tasks to save must not be null";
-        List<String> lines = new ArrayList<>();
+        List<String> lines = new ArrayList<>(tasks.size());
         for (Task task : tasks) {
             assert task != null : "Task in list must not be null";
             lines.add(task.toFileString());

@@ -53,9 +53,9 @@ public class TaskList {
 
     /**
      * Removes a task from the list at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to remove
+     * @param index The 0-based index of the task to remove
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void removeTask(int index) {
@@ -65,9 +65,9 @@ public class TaskList {
 
     /**
      * Marks a task as done at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to mark as done
+     * @param index The 0-based index of the task to mark as done
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void markTaskAsDone(int index) {
@@ -78,9 +78,9 @@ public class TaskList {
 
     /**
      * Marks a task as not done at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to mark as not done
+     * @param index The 0-based index of the task to mark as not done
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     public void markTaskAsNotDone(int index) {
@@ -91,9 +91,9 @@ public class TaskList {
 
     /**
      * Returns the task at the specified index.
-     * The index is 1-based (user-friendly).
+     * The index is 0-based for internal use.
      *
-     * @param index The 1-based index of the task to retrieve
+     * @param index The 0-based index of the task to retrieve
      * @return The task at the specified index
      * @throws IndexOutOfBoundsException if the index is out of range
      */
