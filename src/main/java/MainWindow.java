@@ -26,7 +26,7 @@ public class MainWindow extends AnchorPane {
 
     // Avatar images for chat interface
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/dudu.jpg"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/bubu.jpg"));
+    private Image jimmyImage = new Image(this.getClass().getResourceAsStream("/images/bubu.jpg"));
 
     @FXML
     public void initialize() {
@@ -75,9 +75,9 @@ public class MainWindow extends AnchorPane {
         HBox botWrapper = new HBox();
         botWrapper.setAlignment(Pos.TOP_LEFT);
         if (isError) {
-            botWrapper.getChildren().add(DialogBox.getErrorDialog(response, dukeImage));
+            botWrapper.getChildren().add(DialogBox.getErrorDialog(response, jimmyImage));
         } else {
-            botWrapper.getChildren().add(DialogBox.getDukeDialog(response, dukeImage));
+            botWrapper.getChildren().add(DialogBox.getJimmyDialog(response, jimmyImage));
         }
         dialogContainer.getChildren().add(botWrapper);
 
@@ -93,7 +93,7 @@ public class MainWindow extends AnchorPane {
                            "Type 'help' to see what musical magic I can do! Dadada! 🎵";
         HBox welcomeWrapper = new HBox();
         welcomeWrapper.setAlignment(Pos.TOP_LEFT);
-        welcomeWrapper.getChildren().add(DialogBox.getDukeDialog(welcomeText, dukeImage));
+        welcomeWrapper.getChildren().add(DialogBox.getJimmyDialog(welcomeText, jimmyImage));
         dialogContainer.getChildren().add(welcomeWrapper);
     }
 }

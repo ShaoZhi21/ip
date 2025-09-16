@@ -64,7 +64,7 @@ public class DialogBox extends HBox {
      * Creates a bot dialog box with left-aligned styling.
      * Bot messages: avatar on left, text on right (normal layout).
      */
-    public static DialogBox getDukeDialog(String text, Image img) {
+    public static DialogBox getJimmyDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         // No flip - avatar stays on left, text on right
         db.dialog.getStyleClass().add("bot-message");
