@@ -111,6 +111,9 @@ public class Jimmy {
                         throw new JimmyException("The description of a mark cannot be empty.");
                     }
                     int markIndex = Parser.parseTaskIndex(parsed.fullInput);
+                    if (markIndex >= taskList.getSize()) {
+                        throw new JimmyException("Task index " + (markIndex + 1) + " is out of range. You have " + taskList.getSize() + " tasks.");
+                    }
                     Task markedTask = taskList.getTask(markIndex);
                     taskList.markTaskAsDone(markIndex);
                     storage.save(taskList.getAllTasks());
@@ -121,6 +124,9 @@ public class Jimmy {
                         throw new JimmyException("The description of an unmark cannot be empty.");
                     }
                     int unmarkIndex = Parser.parseTaskIndex(parsed.fullInput);
+                    if (unmarkIndex >= taskList.getSize()) {
+                        throw new JimmyException("Task index " + (unmarkIndex + 1) + " is out of range. You have " + taskList.getSize() + " tasks.");
+                    }
                     Task unmarkedTask = taskList.getTask(unmarkIndex);
                     taskList.markTaskAsNotDone(unmarkIndex);
                     storage.save(taskList.getAllTasks());
@@ -180,6 +186,9 @@ public class Jimmy {
                         throw new JimmyException("The description of a delete cannot be empty.");
                     }
                     int deleteIndex = Parser.parseTaskIndex(parsed.fullInput);
+                    if (deleteIndex >= taskList.getSize()) {
+                        throw new JimmyException("Task index " + (deleteIndex + 1) + " is out of range. You have " + taskList.getSize() + " tasks.");
+                    }
                     Task removedTask = taskList.getTask(deleteIndex);
                     taskList.removeTask(deleteIndex);
                     storage.save(taskList.getAllTasks());
