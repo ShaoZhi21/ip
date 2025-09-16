@@ -142,9 +142,15 @@ public class TaskList {
      * Finds tasks that match the given date string.
      * Searches through Deadline and Event tasks for date matches.
      * Supports multiple date formats: dd/MM/yyyy, yyyy-MM-dd, dd-MM-yyyy.
+     * 
+     * This method uses a robust date parsing approach
+     * with multiple fallback formats to handle various user input patterns.
+     * The implementation gracefully handles parsing errors and provides clear
+     * error messages for invalid date formats.
      *
-     * @param dateStr The date string to search for
-     * @return A list of tasks that match the given date
+     * @param dateStr The date string to search for (supports multiple formats)
+     * @return A list of tasks that match the given date, empty list if no matches or invalid date
+     * @throws IllegalArgumentException if the date format is not recognized
      */
     public List<Task> findTasksByDate(String dateStr) {
         List<Task> matchingTasks = new ArrayList<>();
@@ -197,14 +203,29 @@ public class TaskList {
         return matchingTasks;
     }
 
+    /**
+     * Finds tasks that contain all the specified keywords.
+     * Performs case-insensitive, tokenized search across task descriptions and dates.
+     * 
+     * This method implements a sophisticated search algorithm
+     * that tokenizes the search query and performs partial matching across multiple
+     * task fields. The search is order-insensitive and supports partial keyword matches.
+     * 
+     * @param keyword The search keyword(s) - can be multiple words separated by spaces
+     * @return A list of tasks containing all the specified keywords
+     */
     public List<Task> findByKeyword(String keyword) {
+        // Early return for null/empty input to prevent unnecessary processing
         if (keyword == null || keyword.isBlank()) {
             return new ArrayList<>();
         }
+        
+        // Tokenize search query for flexible multi-word matching
         String[] tokens = keyword.toLowerCase().trim().split("\\s+");
 
         return tasks.stream()
                 .filter(task -> {
+                    // Build comprehensive searchable text including dates
                     StringBuilder sb = new StringBuilder(task.getDescription().toLowerCase());
                     if (task instanceof Deadline) {
                         Deadline d = (Deadline) task;
@@ -216,7 +237,7 @@ public class TaskList {
                     }
 
                     String haystack = sb.toString();
-                    // Match if ALL tokens are present somewhere (order-insensitive, partial allowed)
+                    // Match if ALL tokens are present (order-insensitive, partial allowed)
                     return java.util.Arrays.stream(tokens).allMatch(haystack::contains);
                 })
                 .collect(Collectors.toList());
