@@ -2,6 +2,8 @@ package jimmy.task;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import jimmy.exception.JimmyException;
 
 /**
  * Represents an event task in the Jimmy task management system.
@@ -24,15 +26,23 @@ public class Event extends Task {
     /**
      * Constructs a new Event task with the given description, start time, and end time.
      * The date strings will be parsed into LocalDateTime objects.
+     * Validates that start time is before end time.
      *
      * @param description The description of the event task
      * @param from The start date and time as a string
      * @param to The end date and time as a string
+     * @throws JimmyException if date format is invalid or start time is not before end time
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, String from, String to) throws JimmyException {
         super(description);
         this.from = parseDateTime(from);
         this.to = parseDateTime(to);
+        
+        // Validate that start time is before end time
+        if (!this.from.isBefore(this.to)) {
+            throw new JimmyException("Start time must be before end time. Start: " + 
+                this.from.format(DISPLAY_FORMATTER) + ", End: " + this.to.format(DISPLAY_FORMATTER));
+        }
     }
 
     /**
@@ -51,26 +61,39 @@ public class Event extends Task {
     /**
      * Parses a date string into a LocalDateTime object.
      * Tries multiple date formats in order of preference.
+     * Validates that the date actually exists (e.g., Feb 30 is invalid).
      *
      * @param dateTimeStr The date string to parse
      * @return The parsed LocalDateTime object
-     * @throws IllegalArgumentException if the date string cannot be parsed
+     * @throws JimmyException if the date string cannot be parsed or date doesn't exist
      */
-    private LocalDateTime parseDateTime(String dateTimeStr) {
+    private LocalDateTime parseDateTime(String dateTimeStr) throws JimmyException {
+        if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
+            throw new JimmyException("Date cannot be empty.");
+        }
+        
+        String trimmed = dateTimeStr.trim();
+        
         try {
             // Try to parse the format "2/12/2019 1800"
-            return LocalDateTime.parse(dateTimeStr, INPUT_FORMATTER);
-        } catch (Exception e) {
+            return LocalDateTime.parse(trimmed, INPUT_FORMATTER);
+        } catch (DateTimeParseException e) {
             // If parsing fails, try alternative formats
             try {
                 // Try "yyyy-MM-dd HH:mm" format
-                return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            } catch (Exception e2) {
+                return LocalDateTime.parse(trimmed, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            } catch (DateTimeParseException e2) {
                 try {
-                    return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                } catch (Exception e3) {
-                    throw new IllegalArgumentException("Invalid date format: " + dateTimeStr + 
-                        ". Expected format: dd/MM/yyyy HHmm, yyyy-MM-dd HH:mm, or ISO format");
+                    // Try "dd-MM-yyyy HH:mm" format
+                    return LocalDateTime.parse(trimmed, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+                } catch (DateTimeParseException e3) {
+                    try {
+                        // Try ISO format
+                        return LocalDateTime.parse(trimmed, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    } catch (DateTimeParseException e4) {
+                        throw new JimmyException("Invalid date format: '" + trimmed + 
+                            "'. Expected formats: dd/MM/yyyy HHmm, yyyy-MM-dd HH:mm, dd-MM-yyyy HH:mm, or ISO format");
+                    }
                 }
             }
         }
