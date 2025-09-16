@@ -41,6 +41,7 @@
                     fitToWidth="true"
                     hbarPolicy="NEVER"
                     vbarPolicy="AS_NEEDED"
+                    pannable="true"
                     AnchorPane.bottomAnchor="65.0"
                     AnchorPane.leftAnchor="10.0"
                     AnchorPane.rightAnchor="10.0"
@@ -49,7 +50,7 @@
                 <VBox fx:id="dialogContainer"
                       spacing="8.0"
                       alignment="TOP_LEFT"
-                      VBox.vgrow="ALWAYS" />
+                      minHeight="0.0" />
             </content>
         </ScrollPane>
     </children>

@@ -58,6 +58,11 @@
 
 .scroll-pane {
     -fx-border-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .content {
+    -fx-background-color: transparent;
 }
 
 /* Custom scrollbar styling */
