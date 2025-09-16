@@ -86,9 +86,9 @@ public class MainWindow extends AnchorPane {
      * Adds a welcome message to the conversation.
      */
     private void addWelcomeMessage() {
-        String welcomeText = "Hello! I'm Jimmy, your task management assistant. " +
-                           "I can help you manage todos, deadlines, and events. " +
-                           "Type 'help' to see what I can do!";
+        String welcomeText = "🎵 Dadada! Hello! I'm Melody, your musical task assistant! 🎵\n" +
+                           "Lalalala! I can help you manage todos, deadlines, and events! 🎶\n" +
+                           "Type 'help' to see what musical magic I can do! Dadada! 🎵";
         HBox welcomeWrapper = new HBox();
         welcomeWrapper.setAlignment(Pos.TOP_LEFT);
         welcomeWrapper.getChildren().add(DialogBox.getDukeDialog(welcomeText, dukeImage));

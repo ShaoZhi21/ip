@@ -21,67 +21,69 @@ public class GuiUi extends Ui {
 
     @Override
     public void showGoodbye() {
-        println("Bye. Hope to see you again soon!");
+        println("🎵 Dadada! Hope to see you again soon! Lalalala! 🎵");
     }
 
     @Override
     public void showTaskList(List<Task> tasks) {
+        println("🎶 Lalalala! Here's your task symphony! 🎶");
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
             println((i + 1) + "." + task.toString());
         }
         if (tasks.isEmpty()) {
-            println("(no tasks)");
+            println("Dadada... no tasks to sing about! 🎵");
         }
     }
 
     @Override
     public void showTaskMarkedAsDone(Task task) {
-        println("Nice! I've marked this task as done:");
+        println("🎉 Dadada! Task completed! Lalalala! 🎉");
         println("[" + task.getStatusIcon() + "] " + task.getDescription());
     }
 
     @Override
     public void showTaskMarkedAsNotDone(Task task) {
-        println("OK, I've marked this task as not done yet:");
+        println("🎵 Lalalala! Task unmarked! Dadada! 🎵");
         println("[" + task.getStatusIcon() + "] " + task.getDescription());
     }
 
     @Override
     public void showTaskAdded(Task task, int totalTasks) {
-        println("Got it. I've added this task:");
+        println("🎶 Dadada! New task added to the melody! 🎶");
         println(task.toString());
-        println("Now you have " + totalTasks + " tasks in the list.");
+        println("Lalalala! Now you have " + totalTasks + " tasks in your symphony! 🎵");
     }
 
     @Override
     public void showTaskDeleted(Task task, int totalTasks) {
-        println("Noted. I've removed this task:");
+        println("🎵 Lalalala! Task removed from the song! Dadada! 🎵");
         println(task.toString());
-        println("Now you have " + totalTasks + " tasks in the list.");
+        println("Now your symphony has " + totalTasks + " tasks! 🎶");
     }
 
     @Override
     public void showTaskAddedSimple(String description) {
-        println("added: " + description);
+        println("🎵 Dadada! Added: " + description + " Lalalala! 🎵");
     }
 
     @Override
     public void showError(String... messages) {
+        println("🎵 Dadada... Oops! Something went off-key! 🎵");
         for (String message : messages) {
-            println(message);
+            println("Lalalala: " + message);
         }
     }
 
     @Override
     public void showMatchingTasks(List<Task> tasks) {
-        println("Here are the matching tasks in your list:");
+        println("🎶 Lalalala! Here's your matching task melody! 🎶");
         for (int i = 0; i < tasks.size(); i++) {
             Task t = tasks.get(i);
             println((i + 1) + "." + t.toString());
         }
         if (tasks.isEmpty()) {
-            println("(no matches)");
+            println("Dadada... no matching notes in your symphony! 🎵");
         }
     }
 }
