@@ -13,6 +13,12 @@ public class Parser {
     private static final String KEY_TO = "/to";
     private static final String ERR_POSITIVE_INDEX = "Task index must be a positive number.";
     private static final String ERR_VALID_NUMBER = "Task index must be a valid number.";
+    private static final String ERR_EMPTY_INPUT = "Input cannot be empty or contain only whitespace.";
+    private static final String ERR_INVALID_CHARACTERS = "Input contains invalid special characters.";
+    private static final String ERR_MULTIPLE_SPACES = "Multiple consecutive spaces are not allowed.";
+    private static final String ERR_DUPLICATE_KEYWORD = "Keyword appears multiple times in the command.";
+    private static final String ERR_MISSING_DESCRIPTION = "Description cannot be empty.";
+    private static final String ERR_MISSING_DATE = "Date/time parameter is missing or empty.";
     
     /**
      * Represents a parsed command with its type and full input.
@@ -40,19 +46,45 @@ public class Parser {
     /**
      * Parses a user input string into a ParsedCommand object.
      * Splits the input on the first space to separate command from arguments.
+     * Validates input format and handles common errors.
      *
      * @param userInput The user's input string
      * @return A ParsedCommand object containing the command and full input
+     * @throws JimmyException if input format is invalid
      */
-    public static ParsedCommand parseCommand(String userInput) {
-        assert userInput != null : "Input must not be null";
-        assert !userInput.isEmpty() : "Input must not be empty";
-        String[] inputParts = userInput.split(" ", 2);
+    public static ParsedCommand parseCommand(String userInput) throws JimmyException {
+        if (userInput == null) {
+            throw new JimmyException("Input cannot be null.");
+        }
+        
+        // Normalize input: trim and collapse multiple spaces
+        String normalizedInput = userInput.trim().replaceAll("\\s+", " ");
+        
+        if (normalizedInput.isEmpty()) {
+            throw new JimmyException(ERR_EMPTY_INPUT);
+        }
+        
+        // Check for invalid characters (basic validation)
+        if (containsInvalidCharacters(normalizedInput)) {
+            throw new JimmyException(ERR_INVALID_CHARACTERS);
+        }
+        
+        String[] inputParts = normalizedInput.split(" ", 2);
         String command = inputParts[0];
         String fullInput = inputParts.length > 1 ? inputParts[1] : "";
-        assert command != null && !command.isEmpty() : "Command must be present";
         
         return new ParsedCommand(command, fullInput);
+    }
+    
+    /**
+     * Validates if input contains invalid special characters.
+     * 
+     * @param input The input string to validate
+     * @return true if input contains invalid characters, false otherwise
+     */
+    private static boolean containsInvalidCharacters(String input) {
+        // Allow alphanumeric, spaces, common punctuation, and task keywords
+        return !input.matches("^[a-zA-Z0-9\\s.,!?/\\-:]+$");
     }
     
     /**
@@ -90,24 +122,82 @@ public class Parser {
     
     /**
      * Validates if a deadline command has valid arguments.
-     * Checks that the command contains the required "/by" keyword.
+     * Checks that the command contains the required "/by" keyword and validates format.
      *
      * @param fullInput The full input string after the command
      * @return true if the deadline command is valid, false otherwise
+     * @throws JimmyException if command format is invalid
      */
-    public static boolean isValidDeadlineCommand(String fullInput) {
-        return fullInput.contains(KEY_BY);
+    public static boolean isValidDeadlineCommand(String fullInput) throws JimmyException {
+        if (fullInput.trim().isEmpty()) {
+            throw new JimmyException(ERR_MISSING_DESCRIPTION);
+        }
+        
+        // Check for duplicate /by keywords
+        int byCount = (fullInput.length() - fullInput.replace(KEY_BY, "").length()) / KEY_BY.length();
+        if (byCount > 1) {
+            throw new JimmyException(ERR_DUPLICATE_KEYWORD + " (" + KEY_BY + ")");
+        }
+        
+        if (!fullInput.contains(KEY_BY)) {
+            throw new JimmyException("Deadline command must include '/by' keyword.");
+        }
+        
+        // Validate that description and date are not empty
+        String[] parts = fullInput.split(KEY_BY);
+        if (parts[0].trim().isEmpty()) {
+            throw new JimmyException(ERR_MISSING_DESCRIPTION);
+        }
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new JimmyException(ERR_MISSING_DATE);
+        }
+        
+        return true;
     }
     
     /**
      * Validates if an event command has valid arguments.
-     * Checks that the command contains both "/from" and "/to" keywords.
+     * Checks that the command contains both "/from" and "/to" keywords and validates format.
      *
      * @param fullInput The full input string after the command
      * @return true if the event command is valid, false otherwise
+     * @throws JimmyException if command format is invalid
      */
-    public static boolean isValidEventCommand(String fullInput) {
-        return containsAllKeywords(fullInput, KEY_FROM, KEY_TO);
+    public static boolean isValidEventCommand(String fullInput) throws JimmyException {
+        if (fullInput.trim().isEmpty()) {
+            throw new JimmyException(ERR_MISSING_DESCRIPTION);
+        }
+        
+        // Check for duplicate keywords
+        int fromCount = (fullInput.length() - fullInput.replace(KEY_FROM, "").length()) / KEY_FROM.length();
+        int toCount = (fullInput.length() - fullInput.replace(KEY_TO, "").length()) / KEY_TO.length();
+        
+        if (fromCount > 1) {
+            throw new JimmyException(ERR_DUPLICATE_KEYWORD + " (" + KEY_FROM + ")");
+        }
+        if (toCount > 1) {
+            throw new JimmyException(ERR_DUPLICATE_KEYWORD + " (" + KEY_TO + ")");
+        }
+        
+        if (!containsAllKeywords(fullInput, KEY_FROM, KEY_TO)) {
+            throw new JimmyException("Event command must include both '/from' and '/to' keywords.");
+        }
+        
+        // Validate that all parts are not empty
+        String[] fromParts = fullInput.split(KEY_FROM);
+        if (fromParts[0].trim().isEmpty()) {
+            throw new JimmyException(ERR_MISSING_DESCRIPTION);
+        }
+        
+        String[] toParts = fromParts[1].split(KEY_TO);
+        if (toParts[0].trim().isEmpty()) {
+            throw new JimmyException("Start time cannot be empty.");
+        }
+        if (toParts.length < 2 || toParts[1].trim().isEmpty()) {
+            throw new JimmyException("End time cannot be empty.");
+        }
+        
+        return true;
     }
     
     /**
