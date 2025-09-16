@@ -4,6 +4,7 @@ import jimmy.task.Task;
 import jimmy.task.Todo;
 import jimmy.task.Deadline;
 import jimmy.task.Event;
+import jimmy.exception.JimmyException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,8 +41,9 @@ public class Storage {
      * Creates the file and directory if they don't exist.
      *
      * @return A list of loaded tasks, or an empty list if the file doesn't exist
+     * @throws JimmyException if there are file access issues or data corruption
      */
-    public List<Task> load() {
+    public List<Task> load() throws JimmyException {
         List<Task> tasks = new ArrayList<>();
         try {
             if (Files.exists(filePath)) {
@@ -98,7 +100,11 @@ public class Storage {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error loading tasks: " + e.getMessage());
+            throw new JimmyException("Cannot access storage file: " + e.getMessage());
+        } catch (SecurityException e) {
+            throw new JimmyException("Permission denied accessing storage file: " + e.getMessage());
+        } catch (Exception e) {
+            throw new JimmyException("Unexpected error loading tasks: " + e.getMessage());
         }
         assert tasks != null : "Loaded tasks list must not be null";
         return tasks;
@@ -110,18 +116,31 @@ public class Storage {
      * Creates the file and directory if they don't exist.
      *
      * @param tasks The list of tasks to save
+     * @throws JimmyException if there are file access issues
      */
-    public void save(List<Task> tasks) {
-        assert tasks != null : "Tasks to save must not be null";
+    public void save(List<Task> tasks) throws JimmyException {
+        if (tasks == null) {
+            throw new JimmyException("Tasks list cannot be null.");
+        }
+        
         List<String> lines = new ArrayList<>(tasks.size());
         for (Task task : tasks) {
-            assert task != null : "Task in list must not be null";
+            if (task == null) {
+                throw new JimmyException("Task in list cannot be null.");
+            }
             lines.add(task.toFileString());
         }
+        
         try {
+            // Ensure directory exists
+            Files.createDirectories(filePath.getParent());
             Files.write(filePath, lines); 
+        } catch (IOException e) {
+            throw new JimmyException("Cannot write to storage file: " + e.getMessage());
+        } catch (SecurityException e) {
+            throw new JimmyException("Permission denied writing to storage file: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Error saving tasks: " + e.getMessage());
+            throw new JimmyException("Unexpected error saving tasks: " + e.getMessage());
         }
     }
 }
