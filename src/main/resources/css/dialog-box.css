@@ -1,29 +1,65 @@
-/* Base bubble look */
+/* Base message styling */
 .label {
-    -fx-padding: 10px 14px;
-    -fx-background-radius: 14px;
-    -fx-border-radius: 14px;
+    -fx-padding: 12px 16px;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-line-spacing: 2px;
+    -fx-wrap-text: true;
+    -fx-max-width: 500px;
+    -fx-min-width: 50px;
 }
 
-/* User (Bubu) bubble: soft brown */
-.bubu-label {
-    -fx-background-color: #D9B99B; /* light brown */
-    -fx-text-fill: #2b2b2b;
+/* HBox container styling for better alignment */
+.hbox {
+    -fx-spacing: 8px;
+    -fx-padding: 4px 0px;
+    -fx-alignment: top-left;
 }
 
-/* Bot (Dudu) bubble: white */
-.dudu-label {
-    -fx-background-color: #FFFFFF;
-    -fx-text-fill: #2b2b2b;
-    -fx-border-color: #e5e7eb;
+/* User message styling - right-aligned, blue theme */
+.user-message {
+    -fx-background-color: rgba(59, 130, 246, 0.95);
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 6, 0, 0, 0);
+}
+
+/* Bot message styling - left-aligned, light theme */
+.bot-message {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-text-fill: #1a202c;
+    -fx-border-color: #e2e8f0;
     -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 4, 0, 0, 0);
 }
 
+/* Error message styling - distinctive red theme */
+.error-message {
+    -fx-background-color: rgba(254, 242, 242, 0.95);
+    -fx-text-fill: #dc2626;
+    -fx-border-color: #fecaca;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.3), 6, 0, 0, 0);
+    -fx-font-weight: 500;
+}
+
+/* Avatar styling - smaller, circular with subtle shadow */
 #displayPicture {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-    -fx-rotate: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 0);
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+}
+
+/* HBox container styling for better spacing */
+.hbox {
+    -fx-spacing: 8px;
+    -fx-padding: 4px 0px;
+}
+
+/* VBox container for message content */
+.vbox {
+    -fx-spacing: 4px;
 }
 
 
